@@ -60,6 +60,36 @@ let checkUserEmail = (email) => {
     });
 };
 
+
+
+let getAllUsers = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let users ='';
+            if (userId == 'all') {
+                users = await db.User.findAll({
+
+                })
+                
+            } if (userId && userId !== 'all') {
+                users = await db.User.findOne({
+                    where: { id: userId}
+                })
+                
+            } 
+                
+            resolve(users)
+
+
+
+        } catch (e) {
+            reject(e); 
+            
+        }
+    })
+}
+
 module.exports = {
-    handleUserLogin
+    handleUserLogin,
+    getAllUsers
 };
