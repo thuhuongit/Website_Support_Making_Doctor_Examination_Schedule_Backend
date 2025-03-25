@@ -69,28 +69,23 @@ let getAllUsers = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
             let users = '';
-            if (userId == 'all') {
+            if (userId === 'all') {
                 users = await db.User.findAll({
-
-                })
-
-            } if (userId && userId !== 'all') {
+                    attributes: ['id', 'email', 'firstName', 'lastName', 'address', 'phonenumber', 'gender', 'roleId']
+                });
+            } else if (userId) {
                 users = await db.User.findOne({
-                    where: { id: userId }
-                })
-
+                    where: { id: userId },
+                    attributes: ['id', 'email', 'firstName', 'lastName', 'address', 'phonenumber', 'gender', 'roleId']
+                });
             }
 
-            resolve(users)
-
-
-
+            resolve(users);
         } catch (e) {
             reject(e);
-
         }
-    })
-}
+    });
+};
 
 let hashUserPassword = (password) => {
     return new Promise((resolve, reject) => {
@@ -190,9 +185,14 @@ let updateUserData = (data) => {
 
             })
             if (user) {
+                user.email = data.email;
                 user.firstName = data.firstName;
                 user.lastName = data.lastName;
                 user.address = data.address;
+                user.phonenumber = data.phonenumber;
+                user.gender = data.gender === '1' ? true : false;
+
+
 
                 await user.save();
 
