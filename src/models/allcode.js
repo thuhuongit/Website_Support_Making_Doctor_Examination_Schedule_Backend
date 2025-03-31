@@ -1,23 +1,14 @@
 'use strict';
-const {
-  Model
-} = require('sequelize');
+const { Model } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Allcode extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // Đinh danh các mối quan hệ ví dụ như 1 bác sĩ thuộc 1 phòng khám hoặc nhiều phòng khám 
-
-
-
+      // Định danh các mối quan hệ nếu có
     }
   }
+
   Allcode.init({
-    
     key: DataTypes.STRING,
     type: DataTypes.STRING,
     valueEn: DataTypes.STRING,
@@ -25,6 +16,9 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Allcode',
+    tableName: 'allcode',  // ✅ Đảm bảo đúng tên bảng trong MySQL
+    timestamps: false,     // Nếu bảng không có `createdAt`, `updatedAt`
   });
+
   return Allcode;
 };

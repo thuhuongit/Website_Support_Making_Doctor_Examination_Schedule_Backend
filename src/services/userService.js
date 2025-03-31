@@ -217,10 +217,30 @@ let updateUserData = (data) => {
 
 }
 
+let getAllCodeService = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let res = {};
+            let allcode = await db.Allcode.findAll();
+            console.log("Dữ liệu lấy được:", allcode);
+            res.errCode = 0;
+            res.data = allcode;  
+            resolve(res);
+            
+        } catch (e) {
+            reject(e);
+
+            
+        }
+    })
+
+}
+
 module.exports = {
     handleUserLogin,
     getAllUsers,
     createNewUser,
     deleteUser,
-    updateUserData
+    updateUserData,
+    getAllCodeService
 };
