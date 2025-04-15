@@ -112,6 +112,31 @@ let getAllCode = async(req, res) => {
         
     }
 }
+let postForgotPassword = async (req, res) => {
+    try {
+      let infor = await userService.postForgotPasswordService(req.body);
+      return res.status(200).json(infor);
+    } catch (e) {
+      console.log(e);
+      return res.status(200).json({
+        errCode: -1,
+        errMessage: "Error from server",
+      });
+    }
+  };
+  
+  let postVerifyRetrievePassword = async (req, res) => {
+    try {
+      let infor = await userService.postVerifyRetrievePasswordService(req.body);
+      return res.status(200).json(infor);
+    } catch (e) {
+      console.log(e);
+      return res.status(200).json({
+        errCode: -1,
+        errMessage: "Error from server",
+      });
+    }
+  };
 
 
 
@@ -123,5 +148,7 @@ module.exports = {
     handleCreateNewUser,
     handleEditUser,
     handleDeleteUser,
-    getAllCode 
+    getAllCode,
+    postForgotPassword,
+    postVerifyRetrievePassword,
 };
