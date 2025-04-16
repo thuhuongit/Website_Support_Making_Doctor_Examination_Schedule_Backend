@@ -91,17 +91,20 @@ let checkUserEmail = (email) => {
 
 
 let getAllUsers = (userId) => {
+    console.log('Received userId: ', userId); // Log giá trị userId nhận được
     return new Promise(async (resolve, reject) => {
         try {
             let users = '';
-            if (userId === 'all') {
+            if (!userId || userId === 'all') {
+                // Truy vấn tất cả người dùng
                 users = await db.User.findAll({
-                    attributes: ['id', 'email', 'firstName', 'lastName', 'address', 'phonenumber', 'gender', 'roleId']
+                    attributes: ['id', 'email', 'firstName', 'lastName', 'address', 'phone', 'gender', 'roleId']
                 });
-            } else if (userId) {
+            } else {
+                // Truy vấn người dùng cụ thể theo id
                 users = await db.User.findOne({
                     where: { id: userId },
-                    attributes: ['id', 'email', 'firstName', 'lastName', 'address', 'phonenumber', 'gender', 'roleId']
+                    attributes: ['id', 'email', 'firstName', 'lastName', 'address', 'phone', 'gender', 'roleId']
                 });
             }
             resolve(users);
@@ -124,42 +127,70 @@ let hashUserPassword = (password) => {
 
 
 let createNewUser = (data) => {
-    console.log("dât", data);
+    console.log("data", data);
 
     return new Promise(async (resolve, reject) => {
         try {
+            // Check nếu email đã tồn tại trong hệ thống
             let check = await checkUserEmail(data.email);
             if (check === true) {
                 resolve({
                     errCode: 1,
-                    message: 'Your email is already in used '
+                    message: 'Your email is already in use'
                 });
-            } else{
-            let hashPasswordFromBcrypt = await hashUserPassword(data?.password || "default_password");
-            await db.User.create({
-                email: data.email,
-                password: hashPasswordFromBcrypt,
-                firstName: data.firstName,
-                lastName: data.lastName,
-                address: data.address,
-                phonenumber: data.phonenumber,
-                gender: data.gender === '1' ? true : false,
-                roleId: data.roleId
+            } else {
+                // Nếu chưa tồn tại, ánh xạ các giá trị text thành ID
+                let roleId = mapRoleToId(data.role);  // Hàm map từ text sang roleId
+                let positionId = mapPositionToId(data.position);  // Hàm map từ text sang positionId
 
-            })
+                let hashPasswordFromBcrypt = await hashUserPassword(data?.password || "default_password");
+                
+                await db.User.create({
+                    email: data.email,
+                    password: hashPasswordFromBcrypt,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    address: data.address,
+                    phone: data.phone,
+                    gender: data.gender === 'Nữ' ? true : false,
+                    roleId: roleId,               // ✅ dùng kết quả đã map
+                    positionId: positionId
+                });
+                
 
-            resolve({
-                errCode: 0,
-                message: 'OK'
-            });
-        }
-
+                resolve({
+                    errCode: 0,
+                    message: 'OK'
+                });
+            }
         } catch (e) {
             reject(e);
-
         }
     });
 };
+
+let mapRoleToId = (role) => {
+    // Chuyển đổi role thành roleId từ bảng Allcode hoặc bảng tương ứng
+    switch (role) {
+        case 'Bệnh nhân':
+            return 1;  // Giả sử ID '1' là Bệnh nhân
+        case 'Bác sĩ':
+            return 2;  // Giả sử ID '2' là Bác sĩ
+        default:
+            return 0;  // Giá trị mặc định nếu không nhận diện được
+    }
+};
+
+let mapPositionToId = (position) => {
+    // Tương tự như role, ánh xạ vị trí vào ID
+    switch (position) {
+        case 'Bác sĩ':
+            return 1;  // Giả sử ID '1' là Bác sĩ
+        default:
+            return 0;  // Mặc định nếu không tìm thấy
+    }
+};
+
 let deleteUser = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -208,10 +239,10 @@ let updateUserData = (data) => {
                 user.firstName = data.firstName;
                 user.lastName = data.lastName;
                 user.address = data.address;
-                user.roleId = data.roleId;
-                user.positionId = data.positionId;
+                user.roleId = data.roleId || user.roleId;
+                user.positionId = data.position;
                 user.gender = data.gender;
-                user.phonenumber = data.phonenumber;
+                user.phone = data.phone || user.phone;
             if (data.avatar !== "") {
                 user.image = data.avatar;
             }

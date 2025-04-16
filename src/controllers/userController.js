@@ -45,7 +45,7 @@ let getAllUsers = async(req, res) => {
     return res.status(200).json({
         errCode: 0,
         errMessage: 'OK',
-        users
+        users: users || []
     })
 }
 let getOne = async(req, res) => {
@@ -84,18 +84,38 @@ let handleEditUser = async(req, res) => {
     
 
 }
-let handleDeleteUser = async(req, res) => {
-    if(!req.body.id){
-        return res.status(200).json({
-            errCode:1,
-            errMessage: "Missing required parameters!"
-        })
-    }
-    let message = await userService.deleteUser(req.body.id);
-    console.log(message);
-    return res.status(200).json(message);
 
-}
+let handleDeleteUser = async (req, res) => {
+    const { id } = req.body;
+    if (!id) {
+      return res.status(400).json({
+        errCode: 1,
+        errMessage: "Missing user ID",
+      });
+    }
+  
+    try {
+      const result = await userService.deleteUser(id);
+      if (result) {
+        return res.status(200).json({
+          errCode: 0,
+          errMessage: "User deleted successfully",
+        });
+      } else {
+        return res.status(404).json({
+          errCode: 2,
+          errMessage: "User not found",
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      return res.status(500).json({
+        errCode: -1,
+        errMessage: "An error occurred while deleting the user",
+      });
+    }
+  };
+  
 let getAllCode = async(req, res) => {
     try {
         let data = await userService.getAllCodeService(req.query.type);

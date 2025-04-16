@@ -535,7 +535,7 @@ let getListPatientForDoctor = (doctorId, date) => {
                 "firstName",
                 "address",
                 "gender",
-                "phonenumber",
+                "phone",
               ],
               include: [
                 {
