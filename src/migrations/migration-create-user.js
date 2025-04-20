@@ -25,7 +25,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       phone:{
-        type: DataTypes.STRING
+        type: Sequelize.STRING
       },
       gender:{
         type: Sequelize.BOOLEAN
