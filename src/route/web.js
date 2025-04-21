@@ -45,7 +45,7 @@ let initWebRoutes = (app) => {
     router.get(
       "/api/get-schedule-doctor-by-date",
       doctorController.getScheduleByDate
-    );
+    ); // người dùng chọn ngày và giờgiờ
     router.get(
       "/api/get-extra-infor-doctor-by-id",
       doctorController.getExtraInforDoctorById
@@ -57,15 +57,15 @@ let initWebRoutes = (app) => {
     router.get(
       "/api/get-list-patient-for-doctor",
       doctorController.getListPatientForDoctor
-    );
-    router.post("/api/send-remedy", doctorController.sendRemedy);
+    );// bác sĩ sẽ xem danh sách các lịch hẹn đã đạtư của mình => trả về danh scahs lịch hẹnhẹn
+    router.post("/api/send-remedy", doctorController.sendRemedy); // xác nhận lịch hẹn 
     router.post("/api/create-remedy", doctorController.createRemedy);
-    router.post("/api/cancel-booking", doctorController.cancelBooking);
+    router.post("/api/cancel-booking", doctorController.cancelBooking);// từ chối lịch hẹn 
   
     router.post(
       "/api/patient-book-appointment",
       patientController.postBookAppointment
-    );
+    ); // người dùng chọn giờ và nhập thông tin 
     router.post(
       "/api/verify-book-appointment",
       patientController.postVerifyBookAppointment
