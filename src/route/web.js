@@ -105,6 +105,7 @@ let initWebRoutes = (app) => {
       "/api/get-monthly-revenue-specialty",
       adminController.getMonthlyRevenueSpecialty
     );
+    
 
 
     

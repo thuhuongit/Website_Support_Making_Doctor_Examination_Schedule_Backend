@@ -1,4 +1,3 @@
-'use strict';
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -14,29 +13,33 @@ module.exports = {
       },
       doctorId: {
         type: Sequelize.INTEGER
-        
       },
       patientId: {
         type: Sequelize.INTEGER
       },
-
-      date:{
+      date: {
         type: Sequelize.DATE
       },
-      timeType:{
+      timeType: {
         type: Sequelize.STRING
       },
-
+      token: {
+        type: Sequelize.STRING
+      },
+      imageRemedy: {
+        type: Sequelize.TEXT  // Thêm trường imageRemedy vào bảng
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
-      },//Ngày cập nhật 
+      },
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
-      } //Ngày tạo 
+      }
     });
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Bookings');
   }

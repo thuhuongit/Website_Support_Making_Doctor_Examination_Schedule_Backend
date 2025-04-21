@@ -519,10 +519,11 @@ let getListPatientForDoctor = (doctorId, date) => {
   return new Promise(async (resolve, reject) => {
     try {
       if (!doctorId || !date) {
-        resolve({
+        reject({
           errCode: 1,
           errMessage: "Missing required parameter",
         });
+        return; // Dừng lại ngay sau khi lỗi được ném ra
       } else {
         let data = await db.Booking.findAll({
           where: { statusId: "S2", doctorId: doctorId, date: date },
@@ -555,8 +556,8 @@ let getListPatientForDoctor = (doctorId, date) => {
           nest: true,
         });
 
-        if (!data) {
-          data = {};
+        if (data.length === 0) {
+          data = {}; // Nếu không có dữ liệu, trả về đối tượng rỗng
         }
 
         resolve({
@@ -565,10 +566,14 @@ let getListPatientForDoctor = (doctorId, date) => {
         });
       }
     } catch (e) {
-      reject(e);
+      reject({
+        errCode: 2,
+        errMessage: e.message || "An unexpected error occurred",
+      });
     }
   });
 };
+
 let cancelBooking = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
