@@ -25,7 +25,8 @@
     "nodemailer": "^6.10.1",
     "react-toastify": "^11.0.5",
     "sequelize": "^6.37.6",
-    "text-to-image": "^7.0.1"
+    "text-to-image": "^7.0.1",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

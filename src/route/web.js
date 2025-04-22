@@ -6,6 +6,7 @@ import patientController from "../controllers/patientController";
 import specialtyController from "../controllers/specialtyController";
 import clinicController from "../controllers/clinicController";
 import adminController from "../controllers/adminController";
+import appointmentController from "../controllers/appointmentController";
 
  
 let router = express.Router();
@@ -45,7 +46,7 @@ let initWebRoutes = (app) => {
     router.get(
       "/api/get-schedule-doctor-by-date",
       doctorController.getScheduleByDate
-    ); // người dùng chọn ngày và giờgiờ
+    ); // người dùng chọn ngày và giờ
     router.get(
       "/api/get-extra-infor-doctor-by-id",
       doctorController.getExtraInforDoctorById
@@ -57,7 +58,7 @@ let initWebRoutes = (app) => {
     router.get(
       "/api/get-list-patient-for-doctor",
       doctorController.getListPatientForDoctor
-    );// bác sĩ sẽ xem danh sách các lịch hẹn đã đạtư của mình => trả về danh scahs lịch hẹnhẹn
+    );// bác sĩ sẽ xem danh sách các lịch hẹn đã đặtđặt của mình => trả về danh scahs lịch hẹnhẹn
     router.post("/api/send-remedy", doctorController.sendRemedy); // xác nhận lịch hẹn 
     router.post("/api/create-remedy", doctorController.createRemedy);
     router.post("/api/cancel-booking", doctorController.cancelBooking);// từ chối lịch hẹn 
@@ -85,7 +86,7 @@ let initWebRoutes = (app) => {
       clinicController.getDetailClinicById
     );
   
-    //admin
+    
     router.get("/api/get-weekly-revenue", adminController.getWeeklyRevenue);
     router.get("/api/get-total-new-user-day", adminController.getTotalNewUserDay);
     router.get(
@@ -105,7 +106,13 @@ let initWebRoutes = (app) => {
       "/api/get-monthly-revenue-specialty",
       adminController.getMonthlyRevenueSpecialty
     );
-    
+
+    // Lấy danh sách lịch hẹn cho bác sĩ
+    router.get("/api/appointments", appointmentController.getAllAppointments);
+
+// Xác nhận hoặc huỷ lịch hẹn
+    router.post("/api/appointments/:id/status", appointmentController.updateAppointmentStatus);
+
 
 
     

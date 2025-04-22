@@ -109,21 +109,30 @@ let getProfileDoctorById = async (req, res) => {
   }
 };
 
-let getListPatientForDoctor = async (req, res) => {
+const getListPatientForDoctor = async (req, res) => {
   try {
-    let infor = await doctorService.getListPatientForDoctor(
-      req.query.doctorId,
-      req.query.date
-    );
+    const { doctorId, date } = req.query;
+
+    if (!doctorId || !date) {
+      return res.status(400).json({
+        errCode: 1,
+        errMessage: "Missing required parameters: doctorId or date"
+      });
+    }
+
+    const infor = await doctorService.getListPatientForDoctor(doctorId, date);
+
     return res.status(200).json(infor);
   } catch (e) {
-    console.log(e);
-    return res.status(200).json({
+    console.error("Error in getListPatientForDoctor:", e);
+    return res.status(500).json({
       errCode: -1,
       errMessage: "Error from server",
     });
   }
 };
+
+
 
 let sendRemedy = async (req, res) => {
   try {

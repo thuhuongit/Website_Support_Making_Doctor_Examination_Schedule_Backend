@@ -1,156 +1,129 @@
 require("dotenv").config();
 import nodemailer from "nodemailer";
 
-let sendSimpleEmail = async (dataSend) => {
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false, // true for 465, false for other ports
+// Tạo transporter dùng chung
+
+const getTransporter = () => {
+  return nodemailer.createTransport({
+    service: 'gmail',
     auth: {
-      user: process.env.EMAIL_APP, // generated ethereal user
-      pass: process.env.EMAIL_APP_PASSWORD, // generated ethereal password
+      user: 'hle183414@gmail.com',
+      pass: 'oxmsyxoweywpywho',
     },
   });
-
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: '"Nguyễn Duy Khánh" <duchmdev@gmail.com>', // sender address
-    to: dataSend.receiverEmail, // list of receivers
-    subject: "Thông tin đặt lịch khám bệnh", // Subject line
-    html: getBodyHTMLEmail(dataSend),
-  });
 };
 
-let getBodyHTMLEmail = (dataSend) => {
-  let result = "";
-  if (dataSend.language === "vi") {
-    result = `
-<h3><b>Xin chào ${dataSend.patientName}!</b></h3>
-<p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên my website</p>
-<p>Thông tin đặt lịch khám bệnh:</p>
-<div><b>Thời gian: ${dataSend.time}</b></div>
-<div><b>Bác sĩ: ${dataSend.doctorName}</b></div>
+// Tạo nội dung email đặt lịch
+const getBookingEmailBody = (data) => {
+  const { language, patientName, time, doctorName, redirectLink, date } = data;
 
-<p>Nếu các thông tin trên là đúng sự thật, vui lòng click vào đường link bên dưới để hoàn tất thủ tục đặt lịch khám bệnh.</p>
-<div><a href=${dataSend.redirectLink} target="_blank">Click here</a></div>
+  
 
-<div>Xin chân thành cảm ơn!</div>
-`;
-  }
-  if (dataSend.language === "en") {
-    result = `
-    <h3><b>Dear ${dataSend.patientName}!</b></h3>
-    <p>You received this email because you booked an online medical appointment on mywebsite</p>
-    <p>Information to schedule an appointment:</p>
-    <div><b>Time: ${dataSend.time}</b></div>
-    <div><b>Doctor: ${dataSend.doctorName}</b></div>
-    
-    <p>If the above information is true, please click on the link below to complete the procedure to book an appointment.</p>
-    <div><a href=${dataSend.redirectLink} target="_blank">Click here</a></div>
-    
-    <div>Sincerely thank!</div>
+  if (language === "vi") {
+    return `
+      <h3><b>Xin chào ${patientName}!</b></h3>
+      <p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên website.</p>
+      <p><b>Thông tin đặt lịch:</b></p>
+      <div><b>Thời gian:</b> ${time}</div>
+      <div><b>Bác sĩ:</b> ${doctorName}</div>
+      <p>Vui lòng xác nhận lịch bằng cách click vào link bên dưới:</p>
+      <a href="${redirectLink}" target="_blank">Xác nhận</a>
+      <div>Xin cảm ơn!</div>
     `;
   }
-  return result;
+
+  return `
+    <h3><b>Dear ${patientName}!</b></h3>
+    <p>You received this email because you booked a medical appointment online.</p>
+    <p><b>Appointment details:</b></p>
+    <div><b>Time:</b> ${time}</div>
+    <div><b>Doctor:</b> ${doctorName}</div>
+    <p>Please confirm your appointment by clicking the link below:</p>
+    <a href="${redirectLink}" target="_blank">Confirm</a>
+    <div>Thank you!</div>
+  `;
 };
 
-let getBodyHTMLEmailRemedy = (dataSend) => {
-  let result = "";
-  if (dataSend.language === "vi") {
-    result = `
-<h3><b>Xin chào ${dataSend.patientName}!</b></h3>
-<p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên mywebsite</p>
-<p>Thông tin đơn thuốc được gửi trong file đính kèm.</p>
-<div>Xin chân thành cảm ơn!</div>
-`;
-  }
-  if (dataSend.language === "en") {
-    result = `
-    <h3><b>Dear ${dataSend.patientName}!</b></h3>
-    <p>You received this email because you booked an online medical appointment on mywebsite</p>
-    <p>bla bla</p>
-    <div>Sincerely thank!</div>
+// Email nội dung đơn thuốc đính kèm
+const getRemedyEmailBody = (data) => {
+  const { language, patientName } = data;
+
+  if (language === "vi") {
+    return `
+      <h3><b>Xin chào ${patientName}!</b></h3>
+      <p>Bạn nhận được email vì đã đặt lịch khám bệnh online.</p>
+      <p>Đơn thuốc đã được đính kèm trong email này.</p>
+      <div>Xin cảm ơn!</div>
     `;
   }
-  return result;
+
+  return `
+    <h3><b>Dear ${patientName}!</b></h3>
+    <p>You received this email because of your online booking.</p>
+    <p>Your prescription is attached to this email.</p>
+    <div>Thank you!</div>
+  `;
 };
-let sendAttachment = async (dataSend) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-          user: process.env.EMAIL_APP, // generated ethereal user
-          pass: process.env.EMAIL_APP_PASSWORD, // generated ethereal password
-        },
-      });
 
-      // send mail with defined transport object
-      let info = await transporter.sendMail({
-        from: '"Nguyễn Duy Khánh" <duchmdev@gmail.com>', // sender address
-        to: dataSend.email, // list of receivers
-        subject: "Thông tin đặt lịch khám bệnh", // Subject line
-        html: getBodyHTMLEmailRemedy(dataSend),
-        attachments: [
-          {
-            // encoded string as an attachment
-            filename: `remedy-${
-              dataSend.patientId
-            }-${new Date().getTime()}.png`,
-            content: dataSend.imgBase64.split("base64,")[1],
-            encoding: "base64",
-          },
-        ],
-      });
+// Email lấy lại mật khẩu
+const getForgotPasswordEmailBody = (data) => {
+  const { redirectLink } = data;
 
-      resolve(true);
-    } catch (e) {
-      reject(e);
-    }
+  return `
+    <h3><b>Xin chào!</b></h3>
+    <p>Bạn nhận được email này vì đã yêu cầu lấy lại mật khẩu.</p>
+    <p>Vui lòng nhấn vào link bên dưới để tạo mật khẩu mới:</p>
+    <a href="${redirectLink}" target="_blank">Tạo lại mật khẩu</a>
+    <p>Nếu bạn không yêu cầu, hãy bỏ qua email này.</p>
+    <div>Xin cảm ơn!</div>
+  `;
+};
+
+// Gửi email đặt lịch
+const sendSimpleEmail = async (dataSend) => {
+  const transporter = getTransporter();
+
+  await transporter.sendMail({
+    from: `"${process.env.EMAIL_FROM_NAME || "BookingCare"}" <${process.env.EMAIL_APP}>`,
+    to: dataSend.receiverEmail,
+    subject: "Thông tin đặt lịch khám bệnh",
+    html: getBookingEmailBody(dataSend),
   });
 };
 
-let sendForgotPasswordEmail = async (dataSend) => {
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: process.env.EMAIL_APP, // generated ethereal user
-      pass: process.env.EMAIL_APP_PASSWORD, // generated ethereal password
-    },
-  });
+// Gửi email có đơn thuốc đính kèm (ảnh base64)
+const sendAttachment = async (dataSend) => {
+  const transporter = getTransporter();
 
-  // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from: '"Nguyễn Duy Khánh" <duchmdev@gmail.com>', // sender address
-    to: dataSend.receiverEmail, // list of receivers
-    subject: "Thông tin lấy lại mật khẩu", // Subject line
-    html: getBodyHTMLEmailForgotPassword(dataSend),
+  await transporter.sendMail({
+    from: `"${process.env.EMAIL_FROM_NAME || "BookingCare"}" <${process.env.EMAIL_APP}>`,
+    to: dataSend.email,
+    subject: "Đơn thuốc của bạn",
+    html: getRemedyEmailBody(dataSend),
+    attachments: [
+      {
+        filename: `remedy-${dataSend.patientId}-${Date.now()}.png`,
+        content: dataSend.imgBase64.split("base64,")[1],
+        encoding: "base64",
+      },
+    ],
   });
 };
 
-let getBodyHTMLEmailForgotPassword = (dataSend) => {
-  let result = "";
-  result = `
-<h3><b>Xin chào!</b></h3>
-<p>Bạn nhận được email này vì đã yêu cầu lấy lại mật khẩu do quên mật khẩu</p>
+// Gửi email quên mật khẩu
+const sendForgotPasswordEmail = async (dataSend) => {
+  const transporter = getTransporter();
 
-<p>Nếu yêu cầu lấy lại mật khẩu là đúng sự thật, vui lòng click vào đường link bên dưới để hoàn tất thủ tục lấy lại mật khẩu.</p>
-<div><a href=${dataSend.redirectLink} target="_blank">Click here</a></div>
-
-<div>Nếu bạn không yêu cầu lấy lại mật khẩu, hãy bỏ qua email này!</div>
-<div>Xin chân thành cảm ơn!</div>
-`;
-  return result;
+  await transporter.sendMail({
+    from: `"${process.env.EMAIL_FROM_NAME || "BookingCareBookingCare"}" <${process.env.EMAIL_APP}>`,
+    to: dataSend.receiverEmail,
+    subject: "Khôi phục mật khẩu",
+    html: getForgotPasswordEmailBody(dataSend),
+  });
 };
 
 module.exports = {
-  sendSimpleEmail: sendSimpleEmail,
-  sendAttachment: sendAttachment,
-  sendForgotPasswordEmail: sendForgotPasswordEmail,
+  sendSimpleEmail,
+  sendAttachment,
+  sendForgotPasswordEmail,
 };

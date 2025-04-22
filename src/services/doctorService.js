@@ -526,7 +526,7 @@ let getListPatientForDoctor = (doctorId, date) => {
         return; // Dừng lại ngay sau khi lỗi được ném ra
       } else {
         let data = await db.Booking.findAll({
-          where: { statusId: "S2", doctorId: doctorId, date: date },
+          where: { statusId: "S22", doctorId: doctorId, date: date },
           include: [
             {
               model: db.User,
@@ -620,16 +620,19 @@ let sendRemedy = (data) => {
         });
       } else {
         //update patient status
-        let appoinment = await db.Booking.findOne({
-          where: {
-            doctorId: data.doctorId,
-            patientId: data.patientId,
-            timeType: data.timeType,
-            statusId: "S2",
-          },
-          raw: false,
-        });
-
+        let appoinment = await db.Booking.update(
+          { statusId: 'S2' },
+            {
+              where: {
+                 doctorId: doctorId,
+                 patientId: patientId,
+                 date: date,
+                 timeType: timeType,
+                 statusId: 'S1'  // chỉ cập nhật nếu đang ở s1
+    }
+  }
+);
+          
         if (appoinment) {
           appoinment.statusId = "S3";
           await appoinment.save();
