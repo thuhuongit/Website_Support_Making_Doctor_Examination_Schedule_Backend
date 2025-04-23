@@ -526,7 +526,7 @@ let getListPatientForDoctor = (doctorId, date) => {
         return; // Dừng lại ngay sau khi lỗi được ném ra
       } else {
         let data = await db.Booking.findAll({
-          where: { statusId: "S22", doctorId: doctorId, date: date },
+          where: { doctorId: doctorId },
           include: [
             {
               model: db.User,
@@ -538,19 +538,8 @@ let getListPatientForDoctor = (doctorId, date) => {
                 "gender",
                 "phone",
               ],
-              include: [
-                {
-                  model: db.Allcode,
-                  as: "genderData",
-                  attributes: ["valueEn", "valueVi"],
-                },
-              ],
             },
-            {
-              model: db.Allcode,
-              as: "timeTypeDataPatient",
-              attributes: ["valueEn", "valueVi"],
-            },
+            
           ],
           raw: false,
           nest: true,

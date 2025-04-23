@@ -110,7 +110,7 @@ let initWebRoutes = (app) => {
     // Lấy danh sách lịch hẹn cho bác sĩ
     router.get("/api/appointments", appointmentController.getAllAppointments);
 
-// Xác nhận hoặc huỷ lịch hẹn
+    // Xác nhận hoặc huỷ lịch hẹn
     router.post("/api/appointments/:id/status", appointmentController.updateAppointmentStatus);
 
 

@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 
 let buildUrlEmail = (doctorId) => {
   const token = uuidv4(); // Tạo token ngẫu nhiên
-  const baseUrl = process.env.BASE_URL || "http://localhost:5173"; // URL gốc, ưu tiên từ biến môi trường
+  const baseUrl = process.env.BASE_URL || "http://localhost:5173"; 
   const result = `${baseUrl}/verify-booking?token=${token}&doctorId=${doctorId}`; // Tạo đường dẫn
   return result;
 };
@@ -14,7 +14,7 @@ let buildUrlEmail = (doctorId) => {
 let postBookAppointment = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      // Kiểm tra xem có thiếu thông tin không
+      
       if (
         !data.email ||
         !data.doctorId ||
@@ -33,15 +33,15 @@ let postBookAppointment = (data) => {
         // Tạo token duy nhất cho lịch hẹn
         let token = uuidv4();
 
-        // Gửi email xác nhận lịch khám
-        await emailService.sendSimpleEmail({
-          receiverEmail: data.email,
-          patientName: data.fullName,
-          time: data.timeString,
-          doctorName: data.doctorName,
-          language: data.language,
-          redirectLink: buildUrlEmail(data.doctorId),
-        });
+        // // Gửi email xác nhận lịch khám
+        // await emailService.sendSimpleEmail({
+        //   receiverEmail: data.email,
+        //   patientName: data.fullName,
+        //   time: data.timeString,
+        //   doctorName: data.doctorName,
+        //   language: data.language,
+        //   redirectLink: buildUrlEmail(data.doctorId),
+        // });
 
         // Kiểm tra và tạo user nếu chưa tồn tại
         let [user, created] = await db.User.findOrCreate({

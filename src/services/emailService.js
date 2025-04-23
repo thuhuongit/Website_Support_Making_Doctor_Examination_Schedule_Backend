@@ -24,7 +24,7 @@ const getBookingEmailBody = (data) => {
       <h3><b>Xin chào ${patientName}!</b></h3>
       <p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên website.</p>
       <p><b>Thông tin đặt lịch:</b></p>
-      <div><b>Thời gian:</b> ${time}</div>
+      <div><b>Thời gian:</b> ${time}</div>  
       <div><b>Bác sĩ:</b> ${doctorName}</div>
       <p>Vui lòng xác nhận lịch bằng cách click vào link bên dưới:</p>
       <a href="${redirectLink}" target="_blank">Xác nhận</a>
@@ -33,14 +33,14 @@ const getBookingEmailBody = (data) => {
   }
 
   return `
-    <h3><b>Dear ${patientName}!</b></h3>
-    <p>You received this email because you booked a medical appointment online.</p>
-    <p><b>Appointment details:</b></p>
-    <div><b>Time:</b> ${time}</div>
-    <div><b>Doctor:</b> ${doctorName}</div>
-    <p>Please confirm your appointment by clicking the link below:</p>
-    <a href="${redirectLink}" target="_blank">Confirm</a>
-    <div>Thank you!</div>
+    <h3><b>Xin chào ${patientName}!</b></h3>
+      <p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên website.</p>
+      <p><b>Thông tin đặt lịch:</b></p>
+      <div><b>Thời gian:</b> 11:00 - 12:00</div>  
+      <div><b>Bác sĩ:</b> Tiến sĩ, Huỳnh Quốc Cường</div>
+      <p>Vui lòng xác nhận lịch bằng cách click vào link bên dưới:</p>
+      <a href="${redirectLink}" target="_blank">Xác nhận</a>
+      <div>Xin cảm ơn!</div>
   `;
 };
 

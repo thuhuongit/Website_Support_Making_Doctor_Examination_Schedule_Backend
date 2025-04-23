@@ -110,13 +110,17 @@ let getProfileDoctorById = async (req, res) => {
 };
 
 const getListPatientForDoctor = async (req, res) => {
+      // return res.status(400).json({
+      //   errCode: 1,
+      //   errMessage: req.query
+      // });
   try {
     const { doctorId, date } = req.query;
-
-    if (!doctorId || !date) {
+    console .log("doctorId", doctorId)
+    if (!doctorId ) {
       return res.status(400).json({
         errCode: 1,
-        errMessage: "Missing required parameters: doctorId or date"
+        errMessage: "2",
       });
     }
 
