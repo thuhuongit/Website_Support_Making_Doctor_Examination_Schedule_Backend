@@ -8,7 +8,7 @@ const getTransporter = () => {
     service: 'gmail',
     auth: {
       user: 'hle183414@gmail.com',
-      pass: 'yvgglxdfpcunepob',
+      pass: 'xurappdkwhloekbi',
     },
   });
 };
@@ -17,14 +17,13 @@ const getTransporter = () => {
 const getBookingEmailBody = (data) => {
   const { language, patientName, time, doctorName, redirectLink, date } = data;
 
-  
-
   if (language === "vi") {
     return `
       <h3><b>Xin chào ${patientName}!</b></h3>
-      <p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên website.</p>
+      <p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên hệ thống.</p>
       <p><b>Thông tin đặt lịch:</b></p>
-      <div><b>Thời gian:</b> ${time}</div>  
+      <div><b>Thời gian:</b> ${time}</div>
+      <div><b>Ngày:</b> ${date}</div>
       <div><b>Bác sĩ:</b> ${doctorName}</div>
       <p>Vui lòng xác nhận lịch bằng cách click vào link bên dưới:</p>
       <a href="${redirectLink}" target="_blank">Xác nhận</a>
@@ -33,10 +32,11 @@ const getBookingEmailBody = (data) => {
   }
 
   return `
-    <h3><b>Xin chào ${patientName}!</b></h3>
-      <p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên website.</p>
+    <<h3><b>Xin chào ${patientName}!</b></h3>
+      <p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên hệ thống.</p>
       <p><b>Thông tin đặt lịch:</b></p>
-      <div><b>Thời gian:</b> 11:00 - 12:00</div>  
+      <div><b>Thời gian:</b> ${time}</div>
+      <div><b>Ngày:</b> ${date}</div>
       <div><b>Bác sĩ:</b> Tiến sĩ, Huỳnh Quốc Cường</div>
       <p>Vui lòng xác nhận lịch bằng cách click vào link bên dưới:</p>
       <a href="${redirectLink}" target="_blank">Xác nhận</a>
