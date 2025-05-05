@@ -74,21 +74,30 @@ let bulkCreateSchedule = async (req, res) => {
   }
 };
 
+
 let getScheduleByDate = async (req, res) => {
   try {
-    let infor = await doctorService.getScheduleByDate(
-      req.query.doctorId,
-      req.query.date
-    );
-    return res.status(200).json(infor);
+    let { doctorId, date } = req.query;
+    if (!doctorId || !date) {
+      return res.status(400).json({
+        errCode: 1,
+        errMessage: "Missing doctorId or date",
+      });
+    }
+
+    let data = await doctorService.getScheduleByDate(doctorId, date);
+    return res.status(200).json(data);
   } catch (e) {
     console.log(e);
-    return res.status(200).json({
+    return res.status(500).json({
       errCode: -1,
       errMessage: "Error from server",
     });
   }
 };
+
+
+
 
 let getExtraInforDoctorById = async (req, res) => {
   try {

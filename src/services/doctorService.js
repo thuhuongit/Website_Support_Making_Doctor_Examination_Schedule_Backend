@@ -327,11 +327,20 @@ let bulkCreateSchedule = (data) => {
         // Chuyển đổi thành đối tượng và thêm maxNumber nếu cần
         schedule = schedule.map((item) => {
           if (typeof item !== 'object') {
-            return { timeType: item, maxNumber: MAX_NUMBER_SCHEDULE }; 
+            return { 
+              timeType: item, 
+              maxNumber: MAX_NUMBER_SCHEDULE, 
+              date: data.date, 
+              doctorId: data.doctorId 
+            };
           }
-          item.maxNumber = MAX_NUMBER_SCHEDULE; // Giới hạn số bệnh nhân trong mỗi ca
-          return item;
-        });
+          return {
+            ...item,
+            maxNumber: MAX_NUMBER_SCHEDULE,
+            date: data.date,
+            doctorId: data.doctorId,
+          };
+        });        
       } else {
         return reject({
           errCode: 2,
@@ -371,59 +380,34 @@ let bulkCreateSchedule = (data) => {
   });
 };
 
+
 let getScheduleByDate = (doctorId, date) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!doctorId || !date) {
-        return resolve({
-          errCode: 1,
-          errMessage: "Thiếu tham số yêu cầu: bác sĩ hoặc ngày.",
-        });
-      }
-
-      // Truy vấn dữ liệu lịch khám của bác sĩ trong ngày
-      const dataSchedule = await db.Schedule.findAll({
+      let data = await db.Schedule.findAll({
         where: {
-          doctorId: doctorId,
-          date: date,
+          doctorId,
+          date,
         },
-        include: [
-          {
-            model: db.Allcode,
-            as: "timeTypeData",
-            attributes: ["valueEn", "valueVi"],
-          },
-          {
-            model: db.User,
-            as: "doctorData",
-            attributes: ["firstName", "lastName"],
-          },
-        ],
-        raw: true,  // Chỉ lấy dữ liệu thô, không cần phương thức model
-        nest: true, // Đảm bảo dữ liệu liên kết được trả về trong cấu trúc hợp lý
+        attributes: ['timeType', 'date', 'maxNumber'],
+        raw: true,
       });
-
-      if (dataSchedule.length === 0) {
-        return resolve({
-          errCode: 2,
-          errMessage: "Không có lịch khám cho bác sĩ này vào ngày đã chọn.",
-          data: [],
-        });
-      }
 
       resolve({
         errCode: 0,
-        data: dataSchedule,
+        data,
       });
     } catch (e) {
-      console.error("Error:", e);
       reject({
         errCode: -1,
-        errMessage: "Đã xảy ra lỗi khi lấy lịch khám.",
+        errMessage: e.message,
       });
     }
   });
 };
+
+
+
 
 
 let getExtraInforDoctorById = (doctorId) => {

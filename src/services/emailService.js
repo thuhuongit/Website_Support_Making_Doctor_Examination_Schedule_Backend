@@ -8,7 +8,7 @@ const getTransporter = () => {
     service: 'gmail',
     auth: {
       user: 'hle183414@gmail.com',
-      pass: 'oxmsyxoweywpywho',
+      pass: 'yvgglxdfpcunepob',
     },
   });
 };
@@ -82,40 +82,44 @@ const getForgotPasswordEmailBody = (data) => {
 // Gửi email đặt lịch
 const sendSimpleEmail = async (dataSend) => {
   const transporter = getTransporter();
-
-  await transporter.sendMail({
-    from: `"${process.env.EMAIL_FROM_NAME || "BookingCare"}" <${process.env.EMAIL_APP}>`,
-    to: dataSend.receiverEmail,
-    subject: "Thông tin đặt lịch khám bệnh",
-    html: getBookingEmailBody(dataSend),
-  });
+  try {
+    await transporter.sendMail({
+      from: `"${process.env.EMAIL_FROM_NAME || "Booking"}" <${process.env.EMAIL_APP}>`,
+      to: dataSend.receiverEmail,
+      subject: "Thông tin đặt lịch khám bệnh",
+      html: getBookingEmailBody(dataSend),
+    });
+    console.log("Email sent successfully!");
+  } catch (error) {
+    console.error("Error sending email:", error); // In lỗi chi tiết ra console
+  }
 };
 
-// Gửi email có đơn thuốc đính kèm (ảnh base64)
-const sendAttachment = async (dataSend) => {
-  const transporter = getTransporter();
+// // Gửi email có đơn thuốc đính kèm (ảnh base64)
+// const sendAttachment = async (dataSend) => {
+//   const transporter = getTransporter();
 
-  await transporter.sendMail({
-    from: `"${process.env.EMAIL_FROM_NAME || "BookingCare"}" <${process.env.EMAIL_APP}>`,
-    to: dataSend.email,
-    subject: "Đơn thuốc của bạn",
-    html: getRemedyEmailBody(dataSend),
-    attachments: [
-      {
-        filename: `remedy-${dataSend.patientId}-${Date.now()}.png`,
-        content: dataSend.imgBase64.split("base64,")[1],
-        encoding: "base64",
-      },
-    ],
-  });
-};
+//   await transporter.sendMail({
+//     from: `"${process.env.EMAIL_FROM_NAME || "BookingCare"}" <${process.env.EMAIL_APP}>`,
+//     to: dataSend.email,
+//     subject: "Đơn thuốc của bạn",
+//     html: getRemedyEmailBody(dataSend),
+//     attachments: [
+//       {
+//         filename: `remedy-${dataSend.patientId}-${Date.now()}.png`,
+//         content: dataSend.imgBase64.split("base64,")[1],
+//         encoding: "base64",
+//       },
+//     ],
+//   });
+// };
 
 // Gửi email quên mật khẩu
 const sendForgotPasswordEmail = async (dataSend) => {
   const transporter = getTransporter();
 
   await transporter.sendMail({
-    from: `"${process.env.EMAIL_FROM_NAME || "BookingCareBookingCare"}" <${process.env.EMAIL_APP}>`,
+    from: `"${process.env.EMAIL_FROM_NAME || "Booking"}" <${process.env.EMAIL_APP}>`,
     to: dataSend.receiverEmail,
     subject: "Khôi phục mật khẩu",
     html: getForgotPasswordEmailBody(dataSend),
@@ -124,6 +128,6 @@ const sendForgotPasswordEmail = async (dataSend) => {
 
 module.exports = {
   sendSimpleEmail,
-  sendAttachment,
+  // sendAttachment,
   sendForgotPasswordEmail,
 };
