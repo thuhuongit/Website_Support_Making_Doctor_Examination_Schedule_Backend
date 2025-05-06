@@ -126,22 +126,16 @@ let getProfileDoctorById = async (req, res) => {
 };
 
 const getListPatientForDoctor = async (req, res) => {
-      // return res.status(400).json({
-      //   errCode: 1,
-      //   errMessage: req.query
-      // });
   try {
     const { doctorId, date } = req.query;
-    console .log("doctorId", doctorId)
-    if (!doctorId ) {
+    if (!doctorId || !date) {
       return res.status(400).json({
         errCode: 1,
-        errMessage: "2",
+        errMessage: "Missing doctorId or date",
       });
     }
 
     const infor = await doctorService.getListPatientForDoctor(doctorId, date);
-
     return res.status(200).json(infor);
   } catch (e) {
     console.error("Error in getListPatientForDoctor:", e);
@@ -154,18 +148,23 @@ const getListPatientForDoctor = async (req, res) => {
 
 
 
+
+
+
 let sendRemedy = async (req, res) => {
   try {
     let infor = await doctorService.sendRemedy(req.body);
     return res.status(200).json(infor);
   } catch (e) {
-    console.log(e);
+    console.log("Error in sendRemedy:", e);
     return res.status(200).json({
       errCode: -1,
-      errMessage: "Error from server",
+      errMessage: "Lỗi server",
     });
   }
 };
+
+
 
 let createRemedy = async (req, res) => {
   try {

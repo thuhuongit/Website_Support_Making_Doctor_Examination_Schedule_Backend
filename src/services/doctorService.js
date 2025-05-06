@@ -330,14 +330,14 @@ let bulkCreateSchedule = (data) => {
             return { 
               timeType: item, 
               maxNumber: MAX_NUMBER_SCHEDULE, 
-              date: data.date, 
+              date: data, 
               doctorId: data.doctorId 
             };
           }
           return {
             ...item,
             maxNumber: MAX_NUMBER_SCHEDULE,
-            date: data.date,
+            date: data,
             doctorId: data.doctorId,
           };
         });        
@@ -539,37 +539,35 @@ let getListPatientForDoctor = (doctorId, date) => {
           errCode: 1,
           errMessage: "Missing required parameter",
         });
-        return; // Dừng lại ngay sau khi lỗi được ném ra
-      } else {
-        let data = await db.Booking.findAll({
-          where: { doctorId: doctorId },
-          include: [
-            {
-              model: db.User,
-              as: "patientData",
-              attributes: [
-                "email",
-                "firstName",
-                "address",
-                "gender",
-                "phone",
-              ],
-            },
-            
-          ],
-          raw: false,
-          nest: true,
-        });
-
-        if (data.length === 0) {
-          data = {}; // Nếu không có dữ liệu, trả về đối tượng rỗng
-        }
-
-        resolve({
-          errCode: 0,
-          data: data,
-        });
+        return;
       }
+
+      let data = await db.Booking.findAll({
+        where: {
+          doctorId: doctorId,
+          date: date,
+          statusId: "S2", // Lấy những lịch hẹn đã xác nhận
+        },
+        include: [
+          {
+            model: db.User,
+            as: "patientData",
+            attributes: ["email", "firstName", "address", "gender", "phone"],
+          },
+          {
+            model: db.Allcode,
+            as: "timeTypeDataPatient",
+            attributes: ["valueEn", "valueVi"],
+          },
+        ],
+        raw: false,
+        nest: true,
+      });
+
+      resolve({
+        errCode: 0,
+        data: data,
+      });
     } catch (e) {
       reject({
         errCode: 2,
@@ -578,6 +576,8 @@ let getListPatientForDoctor = (doctorId, date) => {
     }
   });
 };
+
+
 
 let cancelBooking = (data) => {
   return new Promise(async (resolve, reject) => {
@@ -618,75 +618,64 @@ let cancelBooking = (data) => {
 let sendRemedy = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.email || !data.doctorId || !data.patientId || !data.timeType) {
-        resolve({
+      console.log("doctorId:", data.doctorId);
+      console.log("patientId:", data.patientId);
+      console.log("timeType:", data.timeType);
+      console.log("date:", data.date);
+
+      // Kiểm tra thiếu tham số
+      if (!data.doctorId || !data.patientId || !data.timeType || !data.date) {
+        return resolve({
           errCode: 1,
           errMessage: "Missing required parameter",
         });
-      } else {
-        //update patient status
-        let appoinment = await db.Booking.update(
-          { statusId: 'S2' },
-            {
-              where: {
-                 doctorId: doctorId,
-                 patientId: patientId,
-                 date: date,
-                 timeType: timeType,
-                 statusId: 'S1'  // chỉ cập nhật nếu đang ở s1
-    }
-  }
-);
-          
-        if (appoinment) {
-          appoinment.statusId = "S3";
-          await appoinment.save();
+      }
+
+      // Chuyển đổi `date` sang định dạng chuẩn (YYYY-MM-DD)
+      const utcDate = new Date(data.date);  // Tạo Date từ chuỗi UTC
+      // Đảm bảo rằng thời gian trong ngày là 00:00:00 ở múi giờ địa phương
+      const localDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate());
+      const formattedDate = localDate.toISOString().split('T')[0];  // Định dạng 'YYYY-MM-DD'
+
+      console.log("Formatted Date:", formattedDate);
+
+      // Cập nhật trạng thái từ S2 => S3
+      const [updated] = await db.Booking.update(
+        { statusId: 'S3' },
+        {
+          where: {
+            doctorId: data.doctorId,
+            patientId: data.patientId,
+            timeType: data.timeType,
+            date: formattedDate,
+            statusId: 'S2'
+          }
         }
+      );
 
-        //send email remedy
-        await emailService.sendAttachment(data);
+      console.log("Rows affected: ", updated);  // Log số lượng bản ghi bị thay đổi
 
-        //create invoice table
-        await db.Invoice.create({
-          doctorId: data.doctorId,
-          patientId: data.patientId,
-          specialtyId: data.specialtyId,
-          totalCost: data.totalCost ? data.totalCost : 0,
-        });
-
-        //update to Revenue User table
-        let userTotalRevenue = await db.User.findOne({
-          where: { id: data.doctorId },
-          raw: false,
-        });
-
-        if (userTotalRevenue) {
-          userTotalRevenue.totalRevenue =
-            userTotalRevenue.totalRevenue + parseInt(data.totalCost);
-          await userTotalRevenue.save();
-        }
-
-        //update to totalCost User table
-        let userTotalCost = await db.User.findOne({
-          where: { id: data.patientId },
-          raw: false,
-        });
-        if (userTotalCost) {
-          userTotalCost.totalCost =
-            userTotalCost.totalCost + parseInt(data.totalCost);
-          await userTotalCost.save();
-        }
-
-        resolve({
-          errCode: 0,
-          errMessage: "ok",
+      if (updated === 0) {
+        return resolve({
+          errCode: 2,
+          errMessage: "Không tìm thấy lịch hẹn phù hợp hoặc trạng thái không hợp lệ",
         });
       }
+
+      return resolve({
+        errCode: 0,
+        errMessage: "Cập nhật trạng thái thành công",
+      });
     } catch (e) {
+      console.log("Lỗi khi cập nhật trạng thái:", e);
       reject(e);
     }
   });
 };
+
+
+
+
 
 let createRemedy = (data) => {
   return new Promise(async (resolve, reject) => {

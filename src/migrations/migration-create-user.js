@@ -26,10 +26,11 @@ module.exports = {
       },
       phone:{
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       gender:{
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
       },
       image:{
         type: Sequelize.STRING
