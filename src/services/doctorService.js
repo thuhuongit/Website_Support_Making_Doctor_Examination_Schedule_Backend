@@ -300,6 +300,7 @@ let getDetailDoctorById = (inputId) => {
   });
 };
 
+//Lưu lịch khám cho bác sĩ (Bảng Schedule)
 let bulkCreateSchedule = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -330,14 +331,14 @@ let bulkCreateSchedule = (data) => {
             return { 
               timeType: item, 
               maxNumber: MAX_NUMBER_SCHEDULE, 
-              date: data, 
+              date: data.date, 
               doctorId: data.doctorId 
             };
           }
           return {
             ...item,
             maxNumber: MAX_NUMBER_SCHEDULE,
-            date: data,
+            date: data.date,
             doctorId: data.doctorId,
           };
         });        
@@ -531,6 +532,7 @@ let getProfileDoctorById = (doctorId) => {
   });
 };
 
+// Lấy danh sách bệnh nhân cho bác sĩ theo ngày 
 let getListPatientForDoctor = (doctorId, date) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -578,43 +580,52 @@ let getListPatientForDoctor = (doctorId, date) => {
 };
 
 
-
+// Hủy  lịch hẹn 
 let cancelBooking = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      if (!data.date || !data.doctorId || !data.patientId || !data.timeType) {
-        resolve({
+      console.log("appointmentId:", data.appointmentId);
+
+      if (!data.appointmentId) {
+        return resolve({
           errCode: 1,
-          errMessage: "Missing required parameter",
-        });
-      } else {
-        //update booking status
-        let appoinment = await db.Booking.findOne({
-          where: {
-            doctorId: data.doctorId,
-            patientId: data.patientId,
-            timeType: data.timeType,
-            date: data.date,
-            statusId: "S2",
-          },
-          raw: false,
-        });
-
-        if (appoinment) {
-          appoinment.statusId = "S4";
-          await appoinment.save();
-        }
-
-        resolve({
-          errCode: 0,
-          errMessage: "ok",
+          errMessage: "Missing required parameter: appointmentId",
         });
       }
+
+      let appointment = await db.Booking.findOne({
+        where: {
+          id: data.appointmentId,
+          statusId: "S2", // chỉ hủy nếu đang chờ xác nhận
+        },
+        raw: false,
+      });
+
+      if (!appointment) {
+        return resolve({
+          errCode: 2,
+          errMessage: "Không tìm thấy lịch hẹn phù hợp hoặc trạng thái không hợp lệ",
+        });
+      }
+
+      appointment.statusId = "S4"; // đã hủy
+      await appointment.save();
+
+      return resolve({
+        errCode: 0,
+        errMessage: "Hủy lịch hẹn thành công",
+      });
     } catch (e) {
+      console.log("Lỗi khi hủy lịch hẹn:", e);
       reject(e);
     }
   });
 };
+
+
+
+
+// Xác nhận lịch hẹn 
 let sendRemedy = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -630,15 +641,7 @@ let sendRemedy = (data) => {
           errMessage: "Missing required parameter",
         });
       }
-
-      // Chuyển đổi `date` sang định dạng chuẩn (YYYY-MM-DD)
-      const utcDate = new Date(data.date);  // Tạo Date từ chuỗi UTC
-      // Đảm bảo rằng thời gian trong ngày là 00:00:00 ở múi giờ địa phương
-      const localDate = new Date(utcDate.getFullYear(), utcDate.getMonth(), utcDate.getDate());
-      const formattedDate = localDate.toISOString().split('T')[0];  // Định dạng 'YYYY-MM-DD'
-
-      console.log("Formatted Date:", formattedDate);
-
+     
       // Cập nhật trạng thái từ S2 => S3
       const [updated] = await db.Booking.update(
         { statusId: 'S3' },
@@ -647,7 +650,7 @@ let sendRemedy = (data) => {
             doctorId: data.doctorId,
             patientId: data.patientId,
             timeType: data.timeType,
-            date: formattedDate,
+            date: data.date,
             statusId: 'S2'
           }
         }

@@ -54,6 +54,7 @@ let getDetailDoctorById = async (req, res) => {
   }
 };
 
+// Lưu lịch khám cho bác sĩ (Bảng Schedule )
 let bulkCreateSchedule = async (req, res) => {
   try {
     if (!req.body.arrSchedule || !req.body.doctorId || !req.body.date) {
@@ -125,6 +126,7 @@ let getProfileDoctorById = async (req, res) => {
   }
 };
 
+// Lấy danh sách bệnh nhận cho bác sĩ theo ngày 
 const getListPatientForDoctor = async (req, res) => {
   try {
     const { doctorId, date } = req.query;
@@ -150,7 +152,7 @@ const getListPatientForDoctor = async (req, res) => {
 
 
 
-
+// Xác nhận lịch hẹn bên doctor 
 let sendRemedy = async (req, res) => {
   try {
     let infor = await doctorService.sendRemedy(req.body);
@@ -179,8 +181,10 @@ let createRemedy = async (req, res) => {
   }
 };
 
+// Hủy lịch hẹn bên doctor 
 let cancelBooking = async (req, res) => {
   try {
+
     let infor = await doctorService.cancelBooking(req.body);
     return res.status(200).json(infor);
   } catch (e) {
@@ -191,6 +195,7 @@ let cancelBooking = async (req, res) => {
     });
   }
 };
+
 module.exports = {
   getTopDoctorHome: getTopDoctorHome,
   getAllDoctors: getAllDoctors,

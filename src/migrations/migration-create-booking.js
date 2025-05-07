@@ -1,6 +1,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const { DataTypes } = Sequelize;
     await queryInterface.createTable('Bookings', {
       id: {
         allowNull: false,
@@ -18,8 +19,10 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       date: {
-        type: Sequelize.DATE
+        type: DataTypes.DATEONLY,
+        yyallowNull: false,
       },
+      
       timeType: {
         type: Sequelize.STRING
       },

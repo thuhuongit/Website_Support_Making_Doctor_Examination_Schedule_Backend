@@ -10,11 +10,10 @@ let buildUrlEmail = (doctorId, token) => {
 };
 
 
-
+// Hàm này để tạo lịch hẹn cho bệnh nhân và gửi email xác nhận 
 let postBookAppointment = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      // Kiểm tra thiếu trường
       if (
         !data.email ||
         !data.doctorId ||
@@ -188,7 +187,7 @@ let postBookAppointment = (data) => {
 
 
 
-
+// Hàm này sẽ dùng để xác nhận lịch hẹn từ email 
 let postVerifyBookAppointment = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
