@@ -14,6 +14,8 @@ let createSpecialty = async (data) => {
     throw error;
   }
 };
+
+
 let getAllSpecialty = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -37,7 +39,7 @@ resolve({
 });
 
     } catch (e) {
-      reject(e); // Reject the promise if there's an error
+      reject(e); 
     }
   });
 };

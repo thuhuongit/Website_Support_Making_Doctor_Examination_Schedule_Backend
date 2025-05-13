@@ -18,7 +18,7 @@ let createSpecialty = async (req, res) => {
       name,
       descriptionMarkdown,
       descriptionHTML,
-      image: `/uploads/${imageFile.filename}`, // Đường dẫn ảnh
+      image: `uploads/${imageFile.filename}`,
     };
 
     // Gọi service để thêm chuyên khoa
@@ -38,11 +38,6 @@ let createSpecialty = async (req, res) => {
       errMessage: "Lỗi server",
     });
   }
-};
-
-module.exports = {
-  createSpecialty,
-  // giữ nguyên các hàm khác
 };
 
 
