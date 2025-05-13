@@ -7,7 +7,7 @@ import specialtyController from "../controllers/specialtyController";
 import clinicController from "../controllers/clinicController";
 import adminController from "../controllers/adminController";
 import appointmentController from "../controllers/appointmentController";
-
+import upload from '../middleware/uploadImage';
  
 let router = express.Router();
 
@@ -71,8 +71,7 @@ let initWebRoutes = (app) => {
       "/api/verify-book-appointment",
       patientController.postVerifyBookAppointment
     );
-  
-    router.post("/api/create-new-specialty", specialtyController.createSpecialty);
+  router.post("/api/create-new-specialty", upload.single("image"), specialtyController.createSpecialty);
     router.get("/api/get-specialty", specialtyController.getAllSpecialty);
     router.get(
       "/api/get-detail-specialty-by-id",

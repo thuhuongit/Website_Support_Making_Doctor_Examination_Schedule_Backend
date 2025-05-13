@@ -1,58 +1,47 @@
 const db = require("../models");
 
-let createSpecialty = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (
-        !data.name ||
-        !data.imageBase64 ||
-        !data.descriptionHTML ||
-        !data.descriptionMarkdown
-      ) {
-        resolve({
-          errCode: 1,
-          errMessage: "Missing required parameter",
-        });
-      } else {
-        await db.Specialty.create({
-          name: data.name,
-          image: data.imageBase64,
-          descriptionHTML: data.descriptionHTML,
-          descriptionMarkdown: data.descriptionMarkdown,
-        });
-
-        resolve({
-          errCode: 0,
-          errMessage: "Ok!",
-        });
-      }
-    } catch (e) {
-      reject(e);
-    }
-  });
+let createSpecialty = async (data) => {
+  try {
+    // Tạo mới chuyên khoa trong cơ sở dữ liệu
+    let specialty = await db.Specialty.create({
+      name: data.name,
+      image: data.image,
+      descriptionMarkdown: data.descriptionMarkdown,
+      descriptionHTML: data.descriptionHTML,
+    });
+    return specialty;
+  } catch (error) {
+    throw error;
+  }
 };
-
-let getAllSpecialty = (data) => {
+let getAllSpecialty = () => {
   return new Promise(async (resolve, reject) => {
     try {
+      // Fetch data from the database
       let data = await db.Specialty.findAll();
 
       if (data && data.length > 0) {
-        data.map((item) => {
-          item.image = new Buffer(item.image, "base64").toString("binary");
-          return item;
-        });
-      }
-      resolve({
-        errCode: 0,
-        errMessage: "Ok!",
-        data,
-      });
+           data.forEach((item) => { // Sử dụng forEach thay vì map vì bạn chỉ cần thay đổi mảng hiện tại
+            if (item.image) { // Kiểm tra xem item.image có dữ liệu không
+              image: Buffer.from(item.image, 'base64').toString('base64')
+             } else {
+              console.log("No image data found for item", item);
+    }
+  });
+}
+
+resolve({
+  errCode: 0,
+  errMessage: "Ok!",
+  data,
+});
+
     } catch (e) {
-      reject(e);
+      reject(e); // Reject the promise if there's an error
     }
   });
 };
+
 
 let getDetailSpecialtyById = (inputId, location) => {
   return new Promise(async (resolve, reject) => {
