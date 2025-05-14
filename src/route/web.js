@@ -32,6 +32,9 @@ let initWebRoutes = (app) => {
       "/api/verify-retrieve-password",
       userController.postVerifyRetrievePassword
     );
+
+
+
   
     router.get("/api/allcode", userController.getAllCode);
   
@@ -42,11 +45,53 @@ let initWebRoutes = (app) => {
       "/api/get-detail-doctor-by-id",
       doctorController.getDetailDoctorById
     );
-    router.post("/api/bulk-create-schedule", doctorController.bulkCreateSchedule); //lưu lịch khám cho bác sĩ
-    router.get(
+
+
+// Giao diện Admin 
+    // Màn hình Manage Health Exam Plan
+    router.post("/api/bulk-create-schedule", doctorController.bulkCreateSchedule); //lưu kế hoạch khám bệnh của bác sĩ
+    // Màn hình Manage Specialist 
+    router.post("/api/create-new-specialty", upload.single("image"), specialtyController.createSpecialty); // Upload hình ảnh chỗ chuyên khoa phổ biếnbiến
+    // Cơ sở y tế nổi bật 
+
+    // Bác sĩ nổi bật 
+
+
+
+
+// Giao diện người dùng 
+    // Chuyên khoa phổ biến     
+    router.get("/api/get-specialty", specialtyController.getAllSpecialty); // Lấy danh sách chuyên khoa 
+    // Cở sở y tế nổi bật 
+
+
+    // Bác sĩ nổi bật 
+
+
+
+    // Giao diện khi bấm vào bác sĩ đã chọn rồi đặt lịch lưu doctorId/ ngày / giờ 
+     router.get(
       "/api/get-schedule-doctor-by-date",
       doctorController.getScheduleByDate
-    ); //  giúp bác sĩ hoặc admin lấy danh sách lịch khám của bác sĩ cho một ngày cụ thể.
+    ); 
+    // Bảng Booking 
+    router.post(
+      "/api/patient-book-appointment",
+      patientController.postBookAppointment
+    ); 
+    // Xác nhận lịch hẹn khi gửi trog email 
+    router.post(
+      "/api/verify-book-appointment",
+      patientController.postVerifyBookAppointment
+    );
+
+
+    
+    
+
+
+
+   
     router.get(
       "/api/get-extra-infor-doctor-by-id",
       doctorController.getExtraInforDoctorById
@@ -55,24 +100,27 @@ let initWebRoutes = (app) => {
       "/api/get-profile-doctor-by-id",
       doctorController.getProfileDoctorById
     );
+
+
+// Giao diện Doctor - Dashboard 
     router.get(
       "/api/get-list-patient-for-doctor",
       doctorController.getListPatientForDoctor
-    );// bác sĩ sẽ xem danh sách các lịch hẹn đã đặtđặt của mình => trả về danh scahs lịch hẹnhẹn
-    router.post("/api/send-remedy", doctorController.sendRemedy); // xác nhận lịch hẹn 
+    ); // Lấy danh sách bệnh nhân từ bảng Booking và UserUser sang giao diện doctor 
+
+    router.post("/api/send-remedy", doctorController.sendRemedy); // xác nhận lịch hẹn trong doctor 
     router.post("/api/create-remedy", doctorController.createRemedy);
-    router.post("/api/cancel-booking", doctorController.cancelBooking);// từ chối lịch hẹn 
+    router.post("/api/cancel-booking", doctorController.cancelBooking);// từ chối lịch hẹn trong doctor 
   
-    router.post(
-      "/api/patient-book-appointment",
-      patientController.postBookAppointment
-    ); // người dùng chọn giờ và nhập thông tin 
-    router.post(
-      "/api/verify-book-appointment",
-      patientController.postVerifyBookAppointment
-    );
-  router.post("/api/create-new-specialty", upload.single("image"), specialtyController.createSpecialty);
-    router.get("/api/get-specialty", specialtyController.getAllSpecialty);
+
+
+
+
+
+
+
+    
+
     router.get(
       "/api/get-detail-specialty-by-id",
       specialtyController.getDetailSpecialtyById
@@ -105,6 +153,9 @@ let initWebRoutes = (app) => {
       "/api/get-monthly-revenue-specialty",
       adminController.getMonthlyRevenueSpecialty
     );
+
+
+
 
     // Lấy danh sách lịch hẹn cho bác sĩ
     router.get("/api/appointments", appointmentController.getAllAppointments);
