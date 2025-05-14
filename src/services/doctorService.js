@@ -532,7 +532,7 @@ let getProfileDoctorById = (doctorId) => {
   });
 };
 
-// Lấy danh sách bệnh nhân cho bác sĩ theo ngày 
+// Lấy danh sách bệnh nhân hiện lên bảng bác sĩ theo ngày 
 let getListPatientForDoctor = (doctorId, date) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -548,7 +548,6 @@ let getListPatientForDoctor = (doctorId, date) => {
         where: {
           doctorId: doctorId,
           date: date,
-          statusId: "S2", // Lấy những lịch hẹn đã xác nhận
         },
         include: [
           {
@@ -578,6 +577,7 @@ let getListPatientForDoctor = (doctorId, date) => {
     }
   });
 };
+
 
 
 // Hủy  lịch hẹn 
