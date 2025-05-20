@@ -126,47 +126,68 @@ let hashUserPassword = (password) => {
 };
 
 
-let createNewUser = (data) => {
-    console.log("data", data);
+const createNewUser = async (data) => {
+    try {
+        console.log("Incoming user data:", data);
+        console.log("Email:", data.email);
+        console.log("Password:", data.password);
+        console.log("First name:", data.firstName);
+        console.log("Last name:", data.lastName);
 
-    return new Promise(async (resolve, reject) => {
-        try {
-            // Check nếu email đã tồn tại trong hệ thống
-            let check = await checkUserEmail(data.email);
-            if (check === true) {
-                resolve({
-                    errCode: 1,
-                    message: 'Your email is already in use'
-                });
-            } else {
-                // Nếu chưa tồn tại, ánh xạ các giá trị text thành ID
-                let roleId = mapRoleToId(data.role);  // Hàm map từ text sang roleId
-                let positionId = mapPositionToId(data.position);  // Hàm map từ text sang positionId
 
-                let hashPasswordFromBcrypt = await hashUserPassword(data?.password || "default_password");
-                
-                await db.User.create({
-                    email: data.email,
-                    password: hashPasswordFromBcrypt,
-                    firstName: data.firstName,
-                    lastName: data.lastName,
-                    address: data.address,
-                    phone: data.phone,
-                    gender: data.gender === 'Nữ' ? true : false,
-                    roleId: roleId,               // ✅ dùng kết quả đã map
-                    positionId: positionId
-                });
-                
-
-                resolve({
-                    errCode: 0,
-                    message: 'OK'
-                });
-            }
-        } catch (e) {
-            reject(e);
+        // Kiểm tra dữ liệu đầu vào
+        if (!data || !data.email || !data.password || !data.firstName || !data.lastName) {
+            return {
+                errCode: 2,
+                message: 'Missing required parameters',
+            };
         }
-    });
+
+        // Kiểm tra email đã tồn tại chưa
+        const emailExists = await checkUserEmail(data.email);
+        if (emailExists) {
+            return {
+                errCode: 1,
+                message: 'Your email is already in use',
+            };
+        }
+
+        // Ánh xạ role và position từ text sang ID
+        const roleId = mapRoleToId(data.role);        
+        const positionId = mapPositionToId(data.position);
+
+        // Hash password
+        const password = data.password.trim();
+        const hashedPassword = await hashUserPassword(password);
+
+        // Tạo người dùng mới
+        await db.User.create({
+            email: data.email,
+            password: hashedPassword,            
+            firstName: data.firstName,
+            lastName: data.lastName,
+            address: data.address,
+            phone: data.phone,
+            gender: data.gender === 'Nữ' ? true : false,
+            roleId: roleId,                      
+            positionId: positionId,              
+            image: data.avatar || null,          
+        });
+        
+        
+          
+        return {
+            errCode: 0,
+            message: 'User created successfully',
+        };
+
+    } catch (error) {
+        console.error("Error in createNewUser:", error);
+        return {
+            errCode: -1,
+            message: 'An error occurred while creating the user',
+        };
+    }
 };
 
 let mapRoleToId = (role) => {

@@ -70,13 +70,24 @@ let getOne = async(req, res) => {
     })
 }
 
-let handleCreateNewUser = async(req, res) => {
-    let message = await userService.createNewUser(req.body);
-    console.log(message);
+let handleCreateNewUser = async (req, res) => {
+  try {
+    const data = req.body;
+    const avatarFile = req.file;
+
+    // Nếu có file thì thêm đường dẫn file vào data
+    if (avatarFile) {
+      data.avatar = `/uploads/${avatarFile.filename}`; // đường dẫn để client truy cập
+    }
+
+    const message = await userService.createNewUser(data);
     return res.status(200).json(message);
+  } catch (e) {
+    console.error("Error in handleCreateNewUser:", e);
+    return res.status(500).json({ errCode: -1, errMessage: "Lỗi server" });
+  }
+};
 
-
-}
 let handleEditUser = async(req, res) => {
     let data = req.body;
     let message = await userService.updateUserData(data);
