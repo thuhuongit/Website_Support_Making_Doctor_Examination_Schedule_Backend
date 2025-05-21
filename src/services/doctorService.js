@@ -6,12 +6,14 @@ const textToImage = require("text-to-image");
 
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
+
+// Lấy danh sách bác sĩ nổi bật lên trang chủ 
 let getTopDoctorHome = (limitInput) => {
   return new Promise(async (resolve, reject) => {
     try {
       let users = await db.User.findAll({
         limit: limitInput,
-        where: { roleId: "R2" },
+        where: { roleId: "2" },
         order: [["createdAt", "DESC"]],
         attributes: {
           exclude: ["password"],
@@ -43,6 +45,14 @@ let getTopDoctorHome = (limitInput) => {
         nest: true,
       });
 
+      //Chuyển buffer thành chuỗi
+      users = users.map((user) => {
+        if (user.image && Buffer.isBuffer(user.image)) {
+          user.image = user.image.toString("utf8");
+        }
+        return user;
+      });
+
       resolve({
         errCode: 0,
         data: users,
@@ -53,11 +63,13 @@ let getTopDoctorHome = (limitInput) => {
   });
 };
 
+
+// Lấy tất cả danh sách bác sĩ 
 let getAllDoctors = () => {
   return new Promise(async (resolve, reject) => {
     try {
       let doctors = await db.User.findAll({
-        where: { roleId: "R2" },
+        where: { roleId: "2" },
         order: [["createdAt", "DESC"]],
         attributes: {
           exclude: ["password"],
@@ -99,25 +111,6 @@ let getAllDoctors = () => {
   });
 };
 
-// let getAllDoctors = () => {
-//   return new Promise(async (resolve, reject) => {
-//     try {
-//       let doctors = await db.User.findAll({
-//         where: { roleId: "R2" },
-//         attributes: {
-//           exclude: ["password", "image"],
-//         },
-//       });
-
-//       resolve({
-//         errCode: 0,
-//         data: doctors,
-//       });
-//     } catch (e) {
-//       reject(e);
-//     }
-//   });
-// };
 let checkRequiredFields = (inputData) => {
   let arrFields = [
     "doctorId",
@@ -147,6 +140,8 @@ let checkRequiredFields = (inputData) => {
     element: element,
   };
 };
+
+// Lưu thông tin HTML hoặc Markdown của bác sĩ 
 
 let saveDetailInforDoctor = (inputData) => {
   return new Promise(async (resolve, reject) => {
@@ -228,6 +223,8 @@ let saveDetailInforDoctor = (inputData) => {
   });
 };
 
+
+// Lấy thông tin chi tiết bác sĩ theo id lên giao diện 
 let getDetailDoctorById = (inputId) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -282,8 +279,9 @@ let getDetailDoctorById = (inputId) => {
 
         //convert image tu buffer sang base64
         if (data && data.image) {
-          data.image =  new Buffer(data.image, "base64").toString("binary");
+          data.image = Buffer.from(data.image, "base64").toString("binary");
         }
+        
 
         if (!data) {
           data = {};

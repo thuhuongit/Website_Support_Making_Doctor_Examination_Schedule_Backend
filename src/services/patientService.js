@@ -56,6 +56,23 @@ let postBookAppointment = (data) => {
 
       // Format ngày từ `data.date`
       let dateString = moment(data.date).format("DD/MM/YYYY");
+      // Lấy thông tin bác sĩ từ db
+      let doctor = await db.User.findOne({
+         where: { id: data.doctorId },
+         attributes: ['firstName', 'lastName'],
+         raw: true,
+    });
+
+      if (!doctor) {
+          return resolve({
+             errCode: 3,
+             errMessage: "Doctor not found",
+     });
+   }
+
+         // Ghép tên bác sĩ đầy đủ
+       let doctorName = doctor.firstName + " " + doctor.lastName;
+
 
       // Gửi email
       await emailService.sendSimpleEmail({
@@ -63,7 +80,7 @@ let postBookAppointment = (data) => {
         patientName: data.fullName,
         time: data.timeType, 
         date: dateString,
-        doctorName: data.doctorName,
+        doctorName: doctorName,
         language: data.language,
         redirectLink: buildUrlEmail(data.doctorId, token),
       });

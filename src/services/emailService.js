@@ -37,7 +37,7 @@ const getBookingEmailBody = (data) => {
       <p><b>Thông tin đặt lịch:</b></p>
       <div><b>Thời gian:</b> ${time}</div>
       <div><b>Ngày:</b> ${date}</div>
-      <div><b>Bác sĩ:</b> Tiến sĩ, Huỳnh Quốc Cường</div>
+      <div><b>Bác sĩ:</b> ${doctorName}</div>
       <p>Vui lòng xác nhận lịch bằng cách click vào link bên dưới:</p>
       <a href="${redirectLink}" target="_blank">Xác nhận</a>
       <div>Xin cảm ơn!</div>

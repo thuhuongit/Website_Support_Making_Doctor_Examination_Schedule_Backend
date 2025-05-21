@@ -32,19 +32,8 @@ let initWebRoutes = (app) => {
       "/api/verify-retrieve-password",
       userController.postVerifyRetrievePassword
     );
-
-
-
-  
     router.get("/api/allcode", userController.getAllCode);
   
-    router.get("/api/top-doctor-home", doctorController.getTopDoctorHome);
-    router.get("/api/get-all-doctors", doctorController.getAllDoctors);
-    router.post("/api/save-infor-doctors", doctorController.postInforDoctor);
-    router.get(
-      "/api/get-detail-doctor-by-id",
-      doctorController.getDetailDoctorById
-    );
 
 
 
@@ -55,7 +44,10 @@ let initWebRoutes = (app) => {
     router.post("/api/create-new-specialty", upload.single("image"), specialtyController.createSpecialty); // Upload hình ảnh chỗ chuyên khoa phổ biếnbiến
     // Cơ sở y tế nổi bật 
 
-    // Bác sĩ nổi bật 
+    // Thông tin bác sĩ 
+    router.get("/api/get-all-doctors", doctorController.getAllDoctors);
+    router.post("/api/save-infor-doctors", doctorController.postInforDoctor);
+    
 
 
 
@@ -67,7 +59,12 @@ let initWebRoutes = (app) => {
 
 
     // Bác sĩ nổi bật 
-
+    router.get("/api/top-doctor-home", doctorController.getTopDoctorHome);
+    // Giao diện thông tin chi tiết bác sĩ 
+    router.get(
+      "/api/get-detail-doctor-by-id",
+      doctorController.getDetailDoctorById
+    );
 
 
     // Giao diện khi bấm vào bác sĩ đã chọn rồi đặt lịch lưu doctorId/ ngày / giờ 
