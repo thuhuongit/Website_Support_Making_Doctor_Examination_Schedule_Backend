@@ -55,19 +55,27 @@ let getDetailDoctorById = async (req, res) => {
 };
 
 // Lưu lịch khám cho bác sĩ (Bảng Schedule )
+const MAX_NUMBER_SCHEDULE = 10;
 let bulkCreateSchedule = async (req, res) => {
   try {
-    if (!req.body.arrSchedule || !req.body.doctorId || !req.body.date) {
+    const { arrSchedule, doctorId, date } = req.body;
+    if (!arrSchedule || !doctorId || !date) {
       return res.status(400).json({
         errCode: 1,
         errMessage: "Missing required parameters: arrSchedule, doctorId, date",
       });
     }
 
-    let infor = await doctorService.bulkCreateSchedule(req.body);
+    // truyền MAX_NUMBER vào service
+    let infor = await doctorService.bulkCreateSchedule({
+      arrSchedule,
+      doctorId,
+      date,
+      maxNumber: MAX_NUMBER_SCHEDULE,
+    });
     return res.status(200).json(infor);
   } catch (e) {
-    console.log(e);
+    console.error(e);
     return res.status(500).json({
       errCode: -1,
       errMessage: "Error from server",
@@ -125,6 +133,7 @@ let getProfileDoctorById = async (req, res) => {
     });
   }
 };
+
 
 // Lấy danh sách bệnh nhận cho bác sĩ theo ngày 
 const getListPatientForDoctor = async (req, res) => {

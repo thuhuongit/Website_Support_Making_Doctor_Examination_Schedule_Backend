@@ -124,6 +124,7 @@ let checkRequiredFields = (inputData) => {
     "addressClinic",
     "note",
     "specialtyId",
+    "description",
   ];
 
   let isValid = true;
@@ -302,79 +303,50 @@ let getDetailDoctorById = (inputId) => {
 let bulkCreateSchedule = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      // Kiểm tra các tham số bắt buộc
-      if (!data.arrSchedule || !data.doctorId || !data.date) {
-        return reject({
-          errCode: 1,
-          errMessage: "Missing required param",
-        });
+      const { arrSchedule, doctorId, date, maxNumber } = data;
+      if (!arrSchedule || !doctorId || !date) {
+        return reject({ errCode: 1, errMessage: "Missing required param" });
       }
 
-      // Kiểm tra xem date có phải là hợp lệ không
-      let date = new Date(data.date);
-      if (isNaN(date.getTime())) {
-        return reject({
-          errCode: 4,
-          errMessage: "Invalid date format",
-        });
+      // kiểm tra date hợp lệ
+      const dateObj = new Date(date);
+      if (isNaN(dateObj.getTime())) {
+        return reject({ errCode: 4, errMessage: "Invalid date format" });
       }
 
-      let schedule = data.arrSchedule;
-
-      // Kiểm tra kiểu dữ liệu của arrSchedule để tránh lỗi
-      if (Array.isArray(schedule) && schedule.length > 0) {
-        // Chuyển đổi thành đối tượng và thêm maxNumber nếu cần
-        schedule = schedule.map((item) => {
-          if (typeof item !== 'object') {
-            return { 
-              timeType: item, 
-              maxNumber: MAX_NUMBER_SCHEDULE, 
-              date: data.date, 
-              doctorId: data.doctorId 
-            };
-          }
-          return {
-            ...item,
-            maxNumber: MAX_NUMBER_SCHEDULE,
-            date: data.date,
-            doctorId: data.doctorId,
-          };
-        });        
-      } else {
-        return reject({
-          errCode: 2,
-          errMessage: "Invalid arrSchedule format",
-        });
-      }
-
-      // Lấy danh sách lịch khám đã có của bác sĩ trong ngày
-      let existing = await db.Schedule.findAll({
-        where: { doctorId: data.doctorId, date: data.date },
-        attributes: ["timeType", "date", "doctorId", "maxNumber"],
-        raw: true,
+      // build danh sách schedule với maxNumber và currentNumber=0
+      let schedules = arrSchedule.map(item => {
+        // nếu item chỉ là string thì gán timeType = item
+        const timeType = (typeof item === "object" ? item.timeType : item);
+        return {
+          doctorId,
+          date,
+          timeType,
+          maxNumber: 10 ,
+          currentNumber: 0
+        };
       });
 
-      // So sánh để tìm lịch khám cần tạo
-      let toCreate = _.differenceWith(schedule, existing, (a, b) => {
-        return a.timeType === b.timeType && +a.date === +b.date;
+      // Lấy các lịch đã có của bác sĩ trong ngày
+      const existing = await db.Schedule.findAll({
+        where: { doctorId, date },
+        attributes: ["doctorId", "date", "timeType"],
+        raw: true
       });
 
-      // Nếu có lịch khám mới, lưu vào cơ sở dữ liệu
-      if (toCreate && toCreate.length > 0) {
+      // Chỉ tạo những slot chưa tồn tại
+      const toCreate = _.filter(schedules, sch =>
+        !existing.some(ex => ex.timeType === sch.timeType)
+      );
+
+      if (toCreate.length > 0) {
         await db.Schedule.bulkCreate(toCreate);
       }
 
-      // Trả về kết quả thành công
-      resolve({
-        errCode: 0,
-        errMessage: "OK",
-      });
+      resolve({ errCode: 0, errMessage: "OK" });
     } catch (e) {
-      // Xử lý lỗi khi xảy ra
-      reject({
-        errCode: 500,
-        errMessage: e.message || "Something went wrong",
-      });
+      console.error(e);
+      reject({ errCode: 500, errMessage: e.message || "Something went wrong" });
     }
   });
 };
