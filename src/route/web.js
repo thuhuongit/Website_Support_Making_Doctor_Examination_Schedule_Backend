@@ -22,10 +22,6 @@ let initWebRoutes = (app) => {
     router.post('/put-crud', homeController.putCRUD); 
     router.get('/delete-crud', homeController.deleteCRUD);
     router.post('/api/login', userController.handleLogin);
-    router.get('/api/get-all-users', userController.getAllUsers); 
-    router.post('/api/create-new-user', upload.single('avatar'), userController.handleCreateNewUser);
-    router.put('/api/edit-user', userController.handleEditUser);
-    router.delete('/api/delete-user', userController.handleDeleteUser);
     router.get('/allcode', userController.getAllCode); 
     router.post("/api/user-forgot-password", userController.postForgotPassword);
     router.post(
@@ -36,13 +32,21 @@ let initWebRoutes = (app) => {
   
 
 
-
 // Giao diện Admin 
-    // Màn hình Manage Health Exam Plan
+    // Màn hình ManageUser
+    router.get('/api/get-all-users', userController.getAllUsers); 
+    router.post('/api/create-new-user', upload.single('avatar'), userController.handleCreateNewUser);
+    router.delete('/api/delete-user', userController.handleDeleteUser);
+    router.put('/api/edit-user', userController.handleEditUser);
+
+    // Màn hình Quản lý kế hoạch khám bệnh 
     router.post("/api/bulk-create-schedule", doctorController.bulkCreateSchedule); //lưu kế hoạch khám bệnh của bác sĩ
-    // Màn hình Manage Specialist 
+
+    // Màn hình Quản lý chuyên khoa 
     router.post("/api/create-new-specialty", upload.single("image"), specialtyController.createSpecialty); // Upload hình ảnh chỗ chuyên khoa phổ biếnbiến
+    
     // Cơ sở y tế nổi bật 
+
 
     // Thông tin bác sĩ 
     router.get("/api/get-all-doctors", doctorController.getAllDoctors);
@@ -83,8 +87,6 @@ let initWebRoutes = (app) => {
       patientController.postVerifyBookAppointment
     );
 
-
-    
 
 
 // Giao diện Doctor - Dashboard 

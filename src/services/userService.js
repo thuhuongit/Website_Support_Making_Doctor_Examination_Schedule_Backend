@@ -194,21 +194,23 @@ let mapRoleToId = (role) => {
     // Chuyển đổi role thành roleId từ bảng Allcode hoặc bảng tương ứng
     switch (role) {
         case 'Bệnh nhân':
-            return 1;  // Giả sử ID '1' là Bệnh nhân
+            return 1;  
         case 'Bác sĩ':
-            return 2;  // Giả sử ID '2' là Bác sĩ
+            return 2; 
         default:
-            return 0;  // Giá trị mặc định nếu không nhận diện được
+            return 0;  
     }
 };
 
 let mapPositionToId = (position) => {
     // Tương tự như role, ánh xạ vị trí vào ID
     switch (position) {
+        case 'Bệnh nhân':
+            return 1;  
         case 'Bác sĩ':
-            return 1;  // Giả sử ID '1' là Bác sĩ
+            return 2; 
         default:
-            return 0;  // Mặc định nếu không tìm thấy
+            return 0;   
     }
 };
 

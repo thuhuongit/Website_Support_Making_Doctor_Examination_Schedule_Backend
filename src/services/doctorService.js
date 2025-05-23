@@ -197,6 +197,7 @@ let saveDetailInforDoctor = (inputData) => {
           doctorInfor.note = inputData.note;
           doctorInfor.specialtyId = inputData.specialtyId;
           doctorInfor.clinicId = inputData.clinicId;
+          doctorInfor.count = (doctorInfor.count || 0) + 1;
 
           await doctorInfor.save();
         } else {
@@ -211,6 +212,7 @@ let saveDetailInforDoctor = (inputData) => {
             note: inputData.note,
             specialtyId: inputData.specialtyId,
             clinicId: inputData.clinicId,
+            count: 1, 
           });
         }
         resolve({
