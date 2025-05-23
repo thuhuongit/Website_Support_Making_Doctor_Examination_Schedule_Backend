@@ -45,7 +45,8 @@ let initWebRoutes = (app) => {
     // Màn hình Quản lý chuyên khoa 
     router.post("/api/create-new-specialty", upload.single("image"), specialtyController.createSpecialty); // Upload hình ảnh chỗ chuyên khoa phổ biếnbiến
     
-    // Cơ sở y tế nổi bật 
+    // Màn hình phòng khám 
+     router.post("/api/create-new-clinic", upload.single("image"), clinicController.createClinic);
 
 
     // Thông tin bác sĩ 
@@ -106,6 +107,8 @@ let initWebRoutes = (app) => {
 
 
 
+
+
     router.get(
       "/api/get-extra-infor-doctor-by-id",
       doctorController.getExtraInforDoctorById
@@ -121,7 +124,6 @@ let initWebRoutes = (app) => {
       specialtyController.getDetailSpecialtyById
     );
   
-    router.post("/api/create-new-clinic", clinicController.createClinic);
     router.get("/api/get-clinic", clinicController.getAllClinic);
     router.get(
       "/api/get-detail-clinic-by-id",

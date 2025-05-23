@@ -1,38 +1,20 @@
 const db = require("../models");
 
-let createClinic = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (
-        !data.name ||
-        !data.address ||
-        !data.imageBase64 ||
-        !data.descriptionHTML ||
-        !data.descriptionMarkdown
-      ) {
-        resolve({
-          errCode: 1,
-          errMessage: "Missing required parameter",
-        });
-      } else {
-        await db.Clinic.create({
-          name: data.name,
-          address: data.address,
-          image: data.imageBase64,
-          descriptionHTML: data.descriptionHTML,
-          descriptionMarkdown: data.descriptionMarkdown,
-        });
+let createClinic = async (data) => {
+  try {
+    let clinic = await db.Clinic.create({
+      name: data.name,
+      address: data.address,
+      image: data.image,  // lưu đường dẫn ảnhh
+      descriptionMarkdown: data.descriptionMarkdown,
+    });
 
-        resolve({
-          errCode: 0,
-          errMessage: "Ok!",
-        });
-      }
-    } catch (e) {
-      reject(e);
-    }
-  });
+    return clinic;  
+  } catch (e) {
+    throw e;
+  }
 };
+
 
 let getAllClinic = (data) => {
   return new Promise(async (resolve, reject) => {
