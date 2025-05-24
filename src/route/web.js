@@ -61,6 +61,8 @@ let initWebRoutes = (app) => {
     // Chuyên khoa phổ biến     
     router.get("/api/get-specialty", specialtyController.getAllSpecialty); // Lấy danh sách chuyên khoa 
     // Cở sở y tế nổi bật 
+    router.get("/api/get-clinic", clinicController.getAllClinic);
+    
 
 
     // Bác sĩ nổi bật 
@@ -124,7 +126,7 @@ let initWebRoutes = (app) => {
       specialtyController.getDetailSpecialtyById
     );
   
-    router.get("/api/get-clinic", clinicController.getAllClinic);
+  
     router.get(
       "/api/get-detail-clinic-by-id",
       clinicController.getDetailClinicById

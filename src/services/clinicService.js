@@ -16,27 +16,34 @@ let createClinic = async (data) => {
 };
 
 
-let getAllClinic = (data) => {
+let getAllClinic = () => {
   return new Promise(async (resolve, reject) => {
     try {
+      // Fetch data from the database
       let data = await db.Clinic.findAll();
 
       if (data && data.length > 0) {
-        data.map((item) => {
-          item.image = new Buffer(item.image, "base64").toString("binary");
-          return item;
-        });
-      }
-      resolve({
-        errCode: 0,
-        errMessage: "Ok!",
-        data,
-      });
+           data.forEach((item) => { // Sử dụng forEach thay vì map vì bạn chỉ cần thay đổi mảng hiện tại
+            if (item.image) { // Kiểm tra xem item.image có dữ liệu không
+              image: Buffer.from(item.image, 'base64').toString('base64')
+             } else {
+              console.log("No image data found for item", item);
+    }
+  });
+}
+
+resolve({
+  errCode: 0,
+  errMessage: "Ok!",
+  data,
+});
+
     } catch (e) {
-      reject(e);
+      reject(e); 
     }
   });
 };
+
 
 let getDetailClinicById = (inputId) => {
   return new Promise(async (resolve, reject) => {
