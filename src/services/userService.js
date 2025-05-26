@@ -127,12 +127,16 @@ let hashUserPassword = (password) => {
 
 
 const createNewUser = async (data) => {
+    const positionId = mapPositionToId(data.position);
+    console.log("Position:", data.position, "→ positionId:", positionId);
+
     try {
         console.log("Incoming user data:", data);
         console.log("Email:", data.email);
         console.log("Password:", data.password);
         console.log("First name:", data.firstName);
         console.log("Last name:", data.lastName);
+        
 
 
         // Kiểm tra dữ liệu đầu vào
@@ -203,12 +207,17 @@ let mapRoleToId = (role) => {
 };
 
 let mapPositionToId = (position) => {
-    // Tương tự như role, ánh xạ vị trí vào ID
     switch (position) {
-        case 'Bệnh nhân':
-            return 1;  
         case 'Bác sĩ':
+            return 1;  
+        case 'Tiến sĩ':
             return 2; 
+        case 'Thạc sĩ':
+            return 3;
+        case 'Phó giáo sư':
+            return 4;
+        case 'Giáo sư':
+            return 5;
         default:
             return 0;   
     }

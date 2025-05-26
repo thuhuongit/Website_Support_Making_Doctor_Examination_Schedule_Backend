@@ -32,9 +32,9 @@ const getBookingEmailBody = (data) => {
   }
 
   return `
-    <<h3><b>Xin chào ${patientName}!</b></h3>
+    <h2><b>Xin chào ${patientName}!</b></h2>
       <p>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên hệ thống.</p>
-      <p><b>Thông tin đặt lịch:</b></p>
+      <p><h4><b>Thông tin đặt lịch:</b></h4></p>
       <div><b>Thời gian:</b> ${time}</div>
       <div><b>Ngày:</b> ${date}</div>
       <div><b>Bác sĩ:</b> ${doctorName}</div>

@@ -19,7 +19,8 @@ let postBookAppointment = (data) => {
         !data.doctorId ||
         !data.timeType || 
         !data.date ||
-        !data.fullName ||
+        !data.lastName ||
+        !data.firstName ||
         !data.selectedGender ||
         !data.address
       ) {
@@ -37,10 +38,12 @@ let postBookAppointment = (data) => {
         where: { email: data.email },
         defaults: {
           email: data.email,
-          roleId: "R3",
+          roleId: "3",
           gender: data.selectedGender,
           address: data.address,
-          firstName: data.fullName,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          phone: data.phone, 
         },
       });
 
@@ -77,7 +80,7 @@ let postBookAppointment = (data) => {
       // Gửi email
       await emailService.sendSimpleEmail({
         receiverEmail: data.email,
-        patientName: data.fullName,
+        patientName: `${data.lastName} ${data.firstName}`,
         time: data.timeType, 
         date: dateString,
         doctorName: doctorName,
