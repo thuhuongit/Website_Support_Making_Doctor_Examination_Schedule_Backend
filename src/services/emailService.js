@@ -1,8 +1,8 @@
 require("dotenv").config();
 import nodemailer from "nodemailer";
 
-// Tạo transporter dùng chung
 
+// Tạo transporter dùng chung
 const getTransporter = () => {
   return nodemailer.createTransport({
     service: 'gmail',
@@ -95,25 +95,6 @@ const sendSimpleEmail = async (dataSend) => {
   }
 };
 
-// // Gửi email có đơn thuốc đính kèm (ảnh base64)
-// const sendAttachment = async (dataSend) => {
-//   const transporter = getTransporter();
-
-//   await transporter.sendMail({
-//     from: `"${process.env.EMAIL_FROM_NAME || "BookingCare"}" <${process.env.EMAIL_APP}>`,
-//     to: dataSend.email,
-//     subject: "Đơn thuốc của bạn",
-//     html: getRemedyEmailBody(dataSend),
-//     attachments: [
-//       {
-//         filename: `remedy-${dataSend.patientId}-${Date.now()}.png`,
-//         content: dataSend.imgBase64.split("base64,")[1],
-//         encoding: "base64",
-//       },
-//     ],
-//   });
-// };
-
 // Gửi email quên mật khẩu
 const sendForgotPasswordEmail = async (dataSend) => {
   const transporter = getTransporter();
@@ -128,6 +109,5 @@ const sendForgotPasswordEmail = async (dataSend) => {
 
 module.exports = {
   sendSimpleEmail,
-  // sendAttachment,
   sendForgotPasswordEmail,
 };

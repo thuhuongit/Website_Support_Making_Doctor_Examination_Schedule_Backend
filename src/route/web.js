@@ -99,7 +99,6 @@ let initWebRoutes = (app) => {
     ); // Lấy danh sách bệnh nhân từ bảng Booking và UserUser sang giao diện doctor 
 
     router.post("/api/send-remedy", doctorController.sendRemedy); // xác nhận lịch hẹn trong doctor 
-    router.post("/api/create-remedy", doctorController.createRemedy);
     router.post("/api/cancel-booking", doctorController.cancelBooking);// từ chối lịch hẹn trong doctor 
   
 

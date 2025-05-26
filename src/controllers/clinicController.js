@@ -1,5 +1,6 @@
 import clinicService from "../services/clinicService";
 
+// Thêm quản lý phòng khám từ admin 
 let createClinic = async (req, res) => {
   try {
     const { name, address, descriptionMarkdown } = req.body;
@@ -40,6 +41,7 @@ let createClinic = async (req, res) => {
     };
 
 
+// Lấy danh sách phòng khám từ db lên giao diện 
 let getAllClinic = async (req, res) => {
   try {
     let infor = await clinicService.getAllClinic();
@@ -52,6 +54,7 @@ let getAllClinic = async (req, res) => {
     });
   }
 };
+
 
 let getDetailClinicById = async (req, res) => {
   try {

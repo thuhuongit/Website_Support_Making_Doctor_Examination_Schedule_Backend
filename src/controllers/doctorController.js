@@ -1,5 +1,6 @@
 import doctorService from "../services/doctorService";
 
+// Lấy danh scahs bác sĩ nổi bật lên trang chủchủ
 let getTopDoctorHome = async (req, res) => {
   let limit = req.query.limit;
   if (!limit) limit = 10;
@@ -15,6 +16,7 @@ let getTopDoctorHome = async (req, res) => {
   }
 };
 
+// Lấy danh scahs tất cả bác sĩ 
 let getAllDoctors = async (req, res) => {
   try {
     let doctors = await doctorService.getAllDoctors();
@@ -28,6 +30,7 @@ let getAllDoctors = async (req, res) => {
   }
 };
 
+
 let postInforDoctor = async (req, res) => {
   try {
     let response = await doctorService.saveDetailInforDoctor(req.body);
@@ -40,6 +43,7 @@ let postInforDoctor = async (req, res) => {
     });
   }
 };
+
 
 let getDetailDoctorById = async (req, res) => {
   try {
@@ -176,20 +180,6 @@ let sendRemedy = async (req, res) => {
 };
 
 
-
-let createRemedy = async (req, res) => {
-  try {
-    let infor = await doctorService.createRemedy(req.body);
-    return res.status(200).json(infor);
-  } catch (e) {
-    console.log(e);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
-
 // Hủy lịch hẹn bên doctor 
 let cancelBooking = async (req, res) => {
   try {
@@ -217,5 +207,4 @@ module.exports = {
   getListPatientForDoctor: getListPatientForDoctor,
   sendRemedy: sendRemedy,
   cancelBooking: cancelBooking,
-  createRemedy: createRemedy,
 };

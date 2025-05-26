@@ -1,5 +1,6 @@
 const db = require("../models");
 
+// Thêm chuyên khoa mới vào db ở bên Admin 
 let createSpecialty = async (data) => {
   try {
     // Tạo mới chuyên khoa trong cơ sở dữ liệu
@@ -15,7 +16,7 @@ let createSpecialty = async (data) => {
   }
 };
 
-
+// Lấy danh scách chuyên khoa từ db lên giao diện 
 let getAllSpecialty = () => {
   return new Promise(async (resolve, reject) => {
     try {

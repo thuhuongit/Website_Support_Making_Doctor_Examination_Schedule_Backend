@@ -1,8 +1,6 @@
 import db from "../models/index";
 require("dotenv").config();
 import _ from "lodash";
-import emailService from "../services/emailService";
-const textToImage = require("text-to-image");
 
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
@@ -142,8 +140,8 @@ let checkRequiredFields = (inputData) => {
   };
 };
 
-// Lưu thông tin HTML hoặc Markdown của bác sĩ 
 
+// Lưu thông tin HTML hoặc Markdown của bác sĩ 
 let saveDetailInforDoctor = (inputData) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -551,7 +549,6 @@ let getListPatientForDoctor = (doctorId, date) => {
 };
 
 
-
 // Hủy  lịch hẹn 
 let cancelBooking = (data) => {
   return new Promise(async (resolve, reject) => {
@@ -593,8 +590,6 @@ let cancelBooking = (data) => {
     }
   });
 };
-
-
 
 
 // Xác nhận lịch hẹn 
@@ -649,95 +644,6 @@ let sendRemedy = (data) => {
 };
 
 
-
-
-
-let createRemedy = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (
-        !data.doctorId ||
-        !data.patientId ||
-        !data.timeType ||
-        !data.date ||
-        !data.token ||
-        !data.patientName ||
-        !data.email ||
-        !data.listMedicine ||
-        !data.desciption
-      ) {
-        resolve({
-          errCode: 1,
-          errMessage: "Missing required parameter",
-        });
-      } else {
-        //create image remedy
-        //get today
-        let today = new Date();
-        let dd = String(today.getDate()).padStart(2, "0");
-        let mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
-        let yyyy = today.getFullYear();
-
-        today = mm + "/" + dd + "/" + yyyy;
-        let contentImageVi = `
-        Thông tin đơn thuốc ngày ${today}
-        Bác sĩ phụ trách: ${data.doctorName}
-
-        Bệnh nhân ${data.patientName}
-        Email: ${data.email}
-
-        Danh sách các thuốc:
-        ${data.listMedicine}
-
-        Thông tin mô tả cách sử dụng:
-        ${data.desciption}
-        `;
-        const dataUriBase64 = textToImage.generateSync(contentImageVi, {
-          debug: false,
-          maxWidth: parseInt("720"),
-          fontSize: parseInt("30"),
-          fontFamily: "Arial",
-          lineHeight: parseInt("50"),
-          margin: 10,
-          bgColor: "#ffffff",
-          textColor: "#000000",
-        });
-
-        //update patient status
-        let appoinment = await db.Booking.findOne({
-          where: {
-            doctorId: data.doctorId,
-            patientId: data.patientId,
-            timeType: data.timeType,
-            date: data.date,
-            token: data.token,
-          },
-          raw: false,
-        });
-
-        if (appoinment) {
-          appoinment.imageRemedy = dataUriBase64;
-          await appoinment.save();
-        }
-
-        //create row histories table
-        await db.History.create({
-          doctorId: data.doctorId,
-          patientId: data.patientId,
-          description: data.desciption,
-          files: dataUriBase64,
-        });
-
-        resolve({
-          errCode: 0,
-          errMessage: "ok",
-        });
-      }
-    } catch (e) {
-      reject(e);
-    }
-  });
-};
 module.exports = {
   getTopDoctorHome: getTopDoctorHome,
   getAllDoctors: getAllDoctors,
@@ -750,5 +656,4 @@ module.exports = {
   getListPatientForDoctor: getListPatientForDoctor,
   sendRemedy: sendRemedy,
   cancelBooking: cancelBooking,
-  createRemedy: createRemedy,
 };

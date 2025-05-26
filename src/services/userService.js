@@ -89,7 +89,7 @@ let checkUserEmail = (email) => {
 };
 
 
-
+// Lấy tất cả người dùng hoặc người dùng theo ID 
 let getAllUsers = (userId) => {
     console.log('Received userId: ', userId); // Log giá trị userId nhận được
     return new Promise(async (resolve, reject) => {
@@ -125,7 +125,7 @@ let hashUserPassword = (password) => {
     });
 };
 
-
+// Tạo người dùng mới 
 const createNewUser = async (data) => {
     const positionId = mapPositionToId(data.position);
     console.log("Position:", data.position, "→ positionId:", positionId);
@@ -137,8 +137,6 @@ const createNewUser = async (data) => {
         console.log("First name:", data.firstName);
         console.log("Last name:", data.lastName);
         
-
-
         // Kiểm tra dữ liệu đầu vào
         if (!data || !data.email || !data.password || !data.firstName || !data.lastName) {
             return {
@@ -194,6 +192,7 @@ const createNewUser = async (data) => {
     }
 };
 
+
 let mapRoleToId = (role) => {
     // Chuyển đổi role thành roleId từ bảng Allcode hoặc bảng tương ứng
     switch (role) {
@@ -223,6 +222,7 @@ let mapPositionToId = (position) => {
     }
 };
 
+// Xóa người dùng theo ID
 let deleteUser = (userId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -251,6 +251,7 @@ let deleteUser = (userId) => {
     });
 };
 
+// Cập nhật thông tin người dùng 
 let updateUserData = (data) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -298,6 +299,7 @@ let updateUserData = (data) => {
         }
     });
 };
+
 
 let getAllCodeService = (typeInput) => {
     return new Promise(async (resolve, reject) => {
