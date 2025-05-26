@@ -57,7 +57,7 @@ let getDetailSpecialtyById = (inputId, location) => {
       } else {
         let data = await db.Specialty.findOne({
           where: { id: inputId },
-          attributes: ["name","descriptionHTML", "descriptionMarkdown"],
+          attributes: ["name", "descriptionHTML", "descriptionMarkdown"],
         });
 
         if (data) {
