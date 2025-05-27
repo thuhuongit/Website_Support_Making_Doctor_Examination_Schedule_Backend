@@ -170,7 +170,7 @@ const createNewUser = async (data) => {
             lastName: data.lastName,
             address: data.address,
             phone: data.phone,
-            gender: data.gender === 'Nữ' ? true : false,
+            gender: data.gender === 'Nam' ? 'M' : data.gender === 'Nữ' ? 'N' : 'K',
             roleId: roleId,                      
             positionId: positionId,              
             image: data.avatar || null,          
@@ -194,7 +194,6 @@ const createNewUser = async (data) => {
 
 
 let mapRoleToId = (role) => {
-    // Chuyển đổi role thành roleId từ bảng Allcode hoặc bảng tương ứng
     switch (role) {
         case 'Bệnh nhân':
             return 1;  

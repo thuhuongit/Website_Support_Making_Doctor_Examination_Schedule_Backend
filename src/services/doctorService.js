@@ -18,16 +18,6 @@ let getTopDoctorHome = (limitInput) => {
         },
         include: [
           {
-            model: db.Allcode,
-            as: "positionData",
-            attributes: ["valueEn", "valueVi"],
-          },
-          {
-            model: db.Allcode,
-            as: "genderData",
-            attributes: ["valueEn", "valueVi"],
-          },
-          {
             model: db.Doctor_Infor,
             attributes: ["specialtyId"],
             include: [
@@ -376,8 +366,6 @@ let getScheduleByDate = (doctorId, date) => {
     }
   });
 };
-
-
 
 
 
