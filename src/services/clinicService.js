@@ -1,12 +1,13 @@
 const db = require("../models");
 
+// Thêm phòng khám mới vào db ở bên Admin 
 let createClinic = async (data) => {
   try {
     let clinic = await db.Clinic.create({
       name: data.name,
       address: data.address,
       image: data.image,  // lưu đường dẫn ảnhh
-      descriptionMarkdown: data.descriptionMarkdown,
+      description: data.description,
     });
 
     return clinic;  
@@ -15,7 +16,7 @@ let createClinic = async (data) => {
   }
 };
 
-
+// Lấy danh sách phòng khám từ db lên giao diện 
 let getAllClinic = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -45,6 +46,8 @@ resolve({
 };
 
 
+
+
 let getDetailClinicById = (inputId) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -59,8 +62,8 @@ let getDetailClinicById = (inputId) => {
           attributes: [
             "name",
             "address",
-            "descriptionHTML",
-            "descriptionMarkdown",
+            "description",
+            "image",
           ],
         });
         if (data) {

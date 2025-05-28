@@ -1,6 +1,6 @@
 import doctorService from "../services/doctorService";
 
-// Lấy danh scahs bác sĩ nổi bật lên trang chủchủ
+// Lấy danh sách bác sĩ nổi bật lên trang chủ
 let getTopDoctorHome = async (req, res) => {
   let limit = req.query.limit;
   if (!limit) limit = 10;
@@ -16,7 +16,7 @@ let getTopDoctorHome = async (req, res) => {
   }
 };
 
-// Lấy danh scahs tất cả bác sĩ 
+// Lấy danh sáchách tất cả bác sĩ 
 let getAllDoctors = async (req, res) => {
   try {
     let doctors = await doctorService.getAllDoctors();
@@ -31,6 +31,7 @@ let getAllDoctors = async (req, res) => {
 };
 
 
+// Lưu thông tin HTML hoặc Markdown của bác sĩ 
 let postInforDoctor = async (req, res) => {
   try {
     let response = await doctorService.saveDetailInforDoctor(req.body);
@@ -45,6 +46,7 @@ let postInforDoctor = async (req, res) => {
 };
 
 
+// Lấy thông tin chi tiết bác sĩ theo id lên giao diện 
 let getDetailDoctorById = async (req, res) => {
   try {
     let infor = await doctorService.getDetailDoctorById(req.query.id);

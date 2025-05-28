@@ -3,10 +3,10 @@ import clinicService from "../services/clinicService";
 // Thêm quản lý phòng khám từ admin 
 let createClinic = async (req, res) => {
   try {
-    const { name, address, descriptionMarkdown } = req.body;
+    const { name, address, description } = req.body;
     const imageFile = req.file; 
 
-    if (!name || !address || !imageFile || !descriptionMarkdown) {
+    if (!name || !address || !imageFile || !description) {
       return res.status(400).json({
         errCode: 1,
         errMessage: "Thiếu thông tin bắt buộc!",
@@ -17,7 +17,7 @@ let createClinic = async (req, res) => {
     const data = {
       name,
       address,
-      descriptionMarkdown,
+      description,
       image: `uploads/${imageFile.filename}`,
     }
 

@@ -1,5 +1,7 @@
 import specialtyService from "../services/speciatlyService";
 
+
+// Thêm chuyên  khoa mới vào db ở bên Admin 
 let createSpecialty = async (req, res) => {
   try {
     const { name, descriptionMarkdown, descriptionHTML } = req.body;
@@ -41,10 +43,11 @@ let createSpecialty = async (req, res) => {
 };
 
 
+// Lấy danh sách chuyên khoa từ db lên giao diện 
 let getAllSpecialty = async (req, res) => {
   try {
-    let infor = await specialtyService.getAllSpecialty(); // Call to the service
-    return res.status(200).json(infor); // Return data to the client
+    let infor = await specialtyService.getAllSpecialty(); 
+    return res.status(200).json(infor); 
   } catch (e) {
     console.log(e);
     return res.status(500).json({
@@ -55,6 +58,7 @@ let getAllSpecialty = async (req, res) => {
 };
 
 
+// Lấy chi tiết chuyên khoa theo ID  và vị trí 
 let getDetailSpecialtyById = async (req, res) => {
   try {
     let infor = await specialtyService.getDetailSpecialtyById(

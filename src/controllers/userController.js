@@ -27,6 +27,7 @@ let handleLogin = async function (req, res) {
     })
 }
 
+// Lấy tất cả người dùng hoặc người dùng theo ID
 let getAllUsers = async(req, res) => {
     let id = req.query.id;
 
@@ -70,14 +71,16 @@ let getOne = async(req, res) => {
     })
 }
 
+
+// Tạo  người dùng mới 
 let handleCreateNewUser = async (req, res) => {
   try {
     const data = req.body;
     const avatarFile = req.file;
 
-    // Nếu có file thì thêm đường dẫn file vào data
+
     if (avatarFile) {
-      data.avatar = `/uploads/${avatarFile.filename}`; // đường dẫn để client truy cập
+      data.avatar = `/uploads/${avatarFile.filename}`; 
     }
 
     const message = await userService.createNewUser(data);
@@ -88,6 +91,8 @@ let handleCreateNewUser = async (req, res) => {
   }
 };
 
+
+// Cập nhật thông tin ngưới dùng 
 let handleEditUser = async(req, res) => {
     let data = req.body;
     let message = await userService.updateUserData(data);
@@ -96,6 +101,8 @@ let handleEditUser = async(req, res) => {
 
 }
 
+
+// Xóa người dùng 
 let handleDeleteUser = async (req, res) => {
     const { id } = req.body;
     if (!id) {

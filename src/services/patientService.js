@@ -99,8 +99,6 @@ let postBookAppointment = (data) => {
   });
 };
 
-
-
 // Hàm này sẽ dùng để xác nhận lịch hẹn từ email 
 let postVerifyBookAppointment = (data) => {
   return new Promise(async (resolve, reject) => {

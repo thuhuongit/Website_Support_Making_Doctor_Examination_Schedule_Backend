@@ -6,7 +6,6 @@ import patientController from "../controllers/patientController";
 import specialtyController from "../controllers/specialtyController";
 import clinicController from "../controllers/clinicController";
 import adminController from "../controllers/adminController";
-import appointmentController from "../controllers/appointmentController";
 import upload from '../middleware/uploadImage';
  
 let router = express.Router();
@@ -68,14 +67,19 @@ let initWebRoutes = (app) => {
 
     // Cở sở y tế nổi bật 
     router.get("/api/get-clinic", clinicController.getAllClinic);
+      // Giao diện thông tin chi tiết cở sở y tế
+       router.get(
+      "/api/get-detail-clinic-by-id",
+      clinicController.getDetailClinicById
+     );
     
     // Bác sĩ nổi bật 
     router.get("/api/top-doctor-home", doctorController.getTopDoctorHome);
-    // Giao diện thông tin chi tiết bác sĩ 
-    router.get(
-      "/api/get-detail-doctor-by-id",
-      doctorController.getDetailDoctorById
-    );
+         // Giao diện thông tin chi tiết bác sĩ 
+           router.get(
+             "/api/get-detail-doctor-by-id",
+          doctorController.getDetailDoctorById
+         );
 
 
     // Giao diện khi bấm vào bác sĩ đã chọn rồi đặt lịch lưu doctorId/ ngày / giờ 
@@ -93,7 +97,6 @@ let initWebRoutes = (app) => {
       "/api/verify-book-appointment",
       patientController.postVerifyBookAppointment
     );
-
 
 
 // Giao diện Doctor - Dashboard 
@@ -114,6 +117,9 @@ let initWebRoutes = (app) => {
 
 
 
+
+
+    
     router.get(
       "/api/get-extra-infor-doctor-by-id",
       doctorController.getExtraInforDoctorById
@@ -127,10 +133,7 @@ let initWebRoutes = (app) => {
     
   
   
-    router.get(
-      "/api/get-detail-clinic-by-id",
-      clinicController.getDetailClinicById
-    );
+   
   
     
     router.get("/api/get-weekly-revenue", adminController.getWeeklyRevenue);
@@ -156,16 +159,7 @@ let initWebRoutes = (app) => {
 
 
 
-    // Lấy danh sách lịch hẹn cho bác sĩ
-    router.get("/api/appointments", appointmentController.getAllAppointments);
-
-    // Xác nhận hoặc huỷ lịch hẹn
-    router.post("/api/appointments/:id/status", appointmentController.updateAppointmentStatus);
-
-
-
-    
-
+  
 
 
 

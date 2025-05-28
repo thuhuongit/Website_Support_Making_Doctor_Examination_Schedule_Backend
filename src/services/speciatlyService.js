@@ -1,9 +1,10 @@
 const db = require("../models");
 
+
 // Thêm chuyên khoa mới vào db ở bên Admin 
 let createSpecialty = async (data) => {
   try {
-    // Tạo mới chuyên khoa trong cơ sở dữ liệu
+    
     let specialty = await db.Specialty.create({
       name: data.name,
       image: data.image,
@@ -16,16 +17,17 @@ let createSpecialty = async (data) => {
   }
 };
 
-// Lấy danh scách chuyên khoa từ db lên giao diện 
+
+// Lấy danh sách chuyên khoa từ db lên giao diện 
 let getAllSpecialty = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      // Fetch data from the database
+      
       let data = await db.Specialty.findAll();
 
       if (data && data.length > 0) {
-           data.forEach((item) => { // Sử dụng forEach thay vì map vì bạn chỉ cần thay đổi mảng hiện tại
-            if (item.image) { // Kiểm tra xem item.image có dữ liệu không
+           data.forEach((item) => { 
+            if (item.image) { 
               image: Buffer.from(item.image, 'base64').toString('base64')
              } else {
               console.log("No image data found for item", item);
@@ -46,6 +48,7 @@ resolve({
 };
 
 
+// Lấy chi tiết chuyên khoa theo ID và vị trí 
 let getDetailSpecialtyById = (inputId, location) => {
   return new Promise(async (resolve, reject) => {
     try {

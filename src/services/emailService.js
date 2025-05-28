@@ -44,26 +44,7 @@ const getBookingEmailBody = (data) => {
   `;
 };
 
-// Email nội dung đơn thuốc đính kèm
-const getRemedyEmailBody = (data) => {
-  const { language, patientName } = data;
 
-  if (language === "vi") {
-    return `
-      <h3><b>Xin chào ${patientName}!</b></h3>
-      <p>Bạn nhận được email vì đã đặt lịch khám bệnh online.</p>
-      <p>Đơn thuốc đã được đính kèm trong email này.</p>
-      <div>Xin cảm ơn!</div>
-    `;
-  }
-
-  return `
-    <h3><b>Dear ${patientName}!</b></h3>
-    <p>You received this email because of your online booking.</p>
-    <p>Your prescription is attached to this email.</p>
-    <div>Thank you!</div>
-  `;
-};
 
 // Email lấy lại mật khẩu
 const getForgotPasswordEmailBody = (data) => {
