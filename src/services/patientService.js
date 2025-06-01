@@ -21,7 +21,7 @@ let postBookAppointment = (data) => {
         !data.date ||
         !data.lastName ||
         !data.firstName ||
-        !data.selectedGender ||
+        (data.selectedGender === undefined || data.selectedGender === null) ||  
         !data.address
       ) {
         return resolve({
@@ -74,7 +74,7 @@ let postBookAppointment = (data) => {
    }
 
          // Ghép tên bác sĩ đầy đủ
-       let doctorName = doctor.firstName + " " + doctor.lastName;
+       let doctorName = doctor.lastName + " " + doctor.firstName;
 
 
       // Gửi email
