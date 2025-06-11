@@ -42,10 +42,14 @@ let initWebRoutes = (app) => {
     router.post("/api/bulk-create-schedule", doctorController.bulkCreateSchedule); //lưu kế hoạch khám bệnh của bác sĩ
 
     // Màn hình Quản lý chuyên khoa 
-    router.post("/api/create-new-specialty", upload.single("image"), specialtyController.createSpecialty); // Upload hình ảnh chỗ chuyên khoa phổ biếnbiến
+    router.get("/api/get-specialty", specialtyController.getAllSpecialty);
+    router.post("/api/create-new-specialty", upload.single("image"), specialtyController.createSpecialty); // Upload hình ảnh chỗ chuyên khoa phổ biến
+    router.delete("/api/delete-specialty", specialtyController.deleteSpecialty);
     
     // Màn hình phòng khám 
-     router.post("/api/create-new-clinic", upload.single("image"), clinicController.createClinic);
+    router.get("/api/get-clinic", clinicController.getAllClinic);
+    router.post("/api/create-new-clinic", upload.single("image"), clinicController.createClinic);
+    router.delete("/api/delete-clinic", clinicController.deleteClinic);
 
 
     // Thông tin bác sĩ 

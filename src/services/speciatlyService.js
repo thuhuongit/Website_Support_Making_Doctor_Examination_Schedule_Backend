@@ -95,8 +95,40 @@ let getDetailSpecialtyById = (inputId, location) => {
   });
 };
 
+// Xóa chuyên khoa theo ID 
+let deleteSpecialty = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!id) {
+        return resolve({
+          errCode: 1,
+          errMessage: "Missing specialty id",
+        });
+      }
+
+      const spec = await db.Specialty.findOne({ where: { id } });
+      if (!spec) {
+        return resolve({
+          errCode: 2,
+          errMessage: "Specialty not found",
+        });
+      }
+
+      await db.Specialty.destroy({ where: { id } });
+
+      resolve({
+        errCode: 0,
+        errMessage: "Delete specialty success",
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createSpecialty: createSpecialty,
   getAllSpecialty: getAllSpecialty,
   getDetailSpecialtyById: getDetailSpecialtyById,
+  deleteSpecialty: deleteSpecialty, 
 };

@@ -74,8 +74,26 @@ let getDetailSpecialtyById = async (req, res) => {
     });
   }
 };
+
+
+// Xóa chuyên khoa theo ID 
+let deleteSpecialty = async (req, res) => {
+  try {
+    const { id } = req.query;
+    const response = await specialtyService.deleteSpecialty(id);
+    return res.status(200).json(response);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+
 module.exports = {
   createSpecialty: createSpecialty,
   getAllSpecialty: getAllSpecialty,
   getDetailSpecialtyById: getDetailSpecialtyById,
+  deleteSpecialty: deleteSpecialty,
 };

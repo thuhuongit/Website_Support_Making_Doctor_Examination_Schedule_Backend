@@ -88,8 +88,41 @@ let getDetailClinicById = (inputId) => {
     }
   });
 };
+
+// Xóa phòng khám theo ID 
+let deleteClinic = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!id) {
+        return resolve({
+          errCode: 1,
+          errMessage: "Missing clinic id",
+        });
+      }
+
+      const spec = await db.Clinic.findOne({ where: { id } });
+      if (!spec) {
+        return resolve({
+          errCode: 2,
+          errMessage: "Clinic not found",
+        });
+      }
+
+      await db.Clinic.destroy({ where: { id } });
+
+      resolve({
+        errCode: 0,
+        errMessage: "Delete clinic success",
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
 module.exports = {
   createClinic: createClinic,
   getAllClinic: getAllClinic,
   getDetailClinicById: getDetailClinicById,
+  deleteClinic, 
 };
