@@ -38,9 +38,6 @@ let getAllUsers = async(req, res) => {
             users: []
 
         })
-        
-    
-        
     }
     let users = await userService.getAllUsers(id);
     return res.status(200).json({
@@ -49,6 +46,7 @@ let getAllUsers = async(req, res) => {
         users: users || []
     })
 }
+
 let getOne = async(req, res) => {
     let id = req.query.id;
 
@@ -59,9 +57,6 @@ let getOne = async(req, res) => {
             users: []
 
         })
-        
-    
-        
     }
     let users = await userService.getAllUsers(id);
     return res.status(200).json({
@@ -98,7 +93,6 @@ let handleEditUser = async(req, res) => {
     let message = await userService.updateUserData(data);
     return res.status(200).json(message);
     
-
 }
 
 
@@ -134,6 +128,7 @@ let handleDeleteUser = async (req, res) => {
     }
   };
   
+
 let getAllCode = async(req, res) => {
     try {
         let data = await userService.getAllCodeService(req.query.type);
@@ -145,9 +140,7 @@ let getAllCode = async(req, res) => {
         return res.status(200).json({
             errCode: -1,
             errMessage: 'Error from server'
-
         })
-        
     }
 }
 let postForgotPassword = async (req, res) => {
@@ -162,6 +155,7 @@ let postForgotPassword = async (req, res) => {
       });
     }
   };
+  
   
   let postVerifyRetrievePassword = async (req, res) => {
     try {

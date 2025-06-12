@@ -31,7 +31,7 @@ let createClinic = async (req, res) => {
           data: result,
         });
       } catch (e) {
-        // Xử lý lỗi
+       
         console.error(e);
         return res.status(500).json({
           errCode: -1,

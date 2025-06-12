@@ -6,14 +6,14 @@ module.exports = {
     return queryInterface.bulkInsert('Users', [
       {
         //bulkInsert : chen nhieu bang ghi cung 1 luc
-        email: 'admin@gmail.com',
-        password:'123456', 
-        firstName: 'ThuHuong',
-        lastName: 'Le',
-        address: 'VietNam',
+        email: '',
+        password:'', 
+        firstName: '',
+        lastName: '',
+        address: '',
         gender: 0,
-        typeRole: 'ROLE',
-        keyRole: 'R1',
+        typeRole: '',
+        keyRole: '',
         createdAt: new Date(),
         updatedAt: new Date()
       },

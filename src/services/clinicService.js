@@ -6,7 +6,7 @@ let createClinic = async (data) => {
     let clinic = await db.Clinic.create({
       name: data.name,
       address: data.address,
-      image: data.image,  // lưu đường dẫn ảnhh
+      image: data.image,  
       description: data.description,
     });
 
@@ -20,17 +20,17 @@ let createClinic = async (data) => {
 let getAllClinic = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      // Fetch data from the database
+      
       let data = await db.Clinic.findAll();
 
       if (data && data.length > 0) {
-           data.forEach((item) => { // Sử dụng forEach thay vì map vì bạn chỉ cần thay đổi mảng hiện tại
-            if (item.image) { // Kiểm tra xem item.image có dữ liệu không
+           data.forEach((item) => { 
+            if (item.image) { 
               image: Buffer.from(item.image, 'base64').toString('base64')
              } else {
               console.log("No image data found for item", item);
-    }
-  });
+       }
+   });
 }
 
 resolve({
@@ -47,7 +47,7 @@ resolve({
 
 
 
-
+// Lấy chi tiết phòng khám theo ID và vị trí 
 let getDetailClinicById = (inputId) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -67,7 +67,6 @@ let getDetailClinicById = (inputId) => {
           ],
         });
         if (data) {
-          //do something
           let doctorClinic = [];
           doctorClinic = await db.Doctor_Infor.findAll({
             where: { clinicId: inputId },

@@ -8,6 +8,7 @@ const salt = bcrypt.genSaltSync(10);
 
 
 
+// Đăng nhập admin và doctor 
 let handleUserLogin = (email, password) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -45,7 +46,6 @@ let handleUserLogin = (email, password) => {
                 });
 
                 if (user) {
-                    // So sánh mật khẩu nhập vào với mật khẩu trong database
                     let check = await bcrypt.compareSync(password, user.password);
 
                     if (check) {
@@ -74,6 +74,8 @@ let handleUserLogin = (email, password) => {
     });
 };
 
+
+// Check xem email đã tồn tại trong hệ thống chưa 
 let checkUserEmail = (email) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -89,19 +91,20 @@ let checkUserEmail = (email) => {
 };
 
 
+
 // Lấy tất cả người dùng hoặc người dùng theo ID 
 let getAllUsers = (userId) => {
-    console.log('Received userId: ', userId); // Log giá trị userId nhận được
+    console.log('Received userId: ', userId); 
     return new Promise(async (resolve, reject) => {
         try {
             let users = '';
             if (!userId || userId === 'all') {
-                // Truy vấn tất cả người dùng
+               
                 users = await db.User.findAll({
                     attributes: ['id', 'email', 'firstName', 'lastName', 'address', 'phone', 'gender', 'roleId']
                 });
             } else {
-                // Truy vấn người dùng cụ thể theo id
+                
                 users = await db.User.findOne({
                     where: { id: userId },
                     attributes: ['id', 'email', 'firstName', 'lastName', 'address', 'phone', 'gender', 'roleId']
@@ -114,6 +117,7 @@ let getAllUsers = (userId) => {
     });
 };
 
+// Hàm băm mật khẩu Admin, doctor, user 
 let hashUserPassword = (password) => {
     return new Promise((resolve, reject) => {
         try {
@@ -125,7 +129,7 @@ let hashUserPassword = (password) => {
     });
 };
 
-// Tạo người dùng mới 
+// Tạo Admin và doctor mới 
 const createNewUser = async (data) => {
     const positionId = mapPositionToId(data.position);
     console.log("Position:", data.position, "→ positionId:", positionId);
@@ -137,7 +141,7 @@ const createNewUser = async (data) => {
         console.log("First name:", data.firstName);
         console.log("Last name:", data.lastName);
         
-        // Kiểm tra dữ liệu đầu vào
+        
         if (!data || !data.email || !data.password || !data.firstName || !data.lastName) {
             return {
                 errCode: 2,
@@ -145,7 +149,6 @@ const createNewUser = async (data) => {
             };
         }
 
-        // Kiểm tra email đã tồn tại chưa
         const emailExists = await checkUserEmail(data.email);
         if (emailExists) {
             return {
@@ -154,15 +157,16 @@ const createNewUser = async (data) => {
             };
         }
 
-        // Ánh xạ role và position từ text sang ID
+        
         const roleId = mapRoleToId(data.role);        
         const positionId = mapPositionToId(data.position);
 
-        // Hash password
+
         const password = data.password.trim();
         const hashedPassword = await hashUserPassword(password);
 
-        // Tạo người dùng mới
+    
+
         await db.User.create({
             email: data.email,
             password: hashedPassword,            
@@ -195,7 +199,7 @@ const createNewUser = async (data) => {
 
 let mapRoleToId = (role) => {
     switch (role) {
-        case 'Bệnh nhân':
+        case 'Admin':
             return 1;  
         case 'Bác sĩ':
             return 2; 
@@ -220,6 +224,7 @@ let mapPositionToId = (position) => {
             return 0;   
     }
 };
+
 
 // Xóa người dùng theo ID
 let deleteUser = (userId) => {
@@ -341,7 +346,7 @@ let buildUrlEmailForgotPassword = (tokenUser, email) => {
             errMessage: "Missing required parameter",
           });
         } else {
-          let tokenUser = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d' -random
+          let tokenUser = uuidv4(); // ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d' 
           await emailService.sendForgotPasswordEmail({
             receiverEmail: data.email,
             redirectLink: buildUrlEmailForgotPassword(tokenUser, data.email),
@@ -384,7 +389,7 @@ let buildUrlEmailForgotPassword = (tokenUser, email) => {
         } else {
           let hashPasswordFromBcrypt = await hashUserPassword(data.newPassword);
   
-          //find user have in table Users-if have update tokenUser
+          
           let user = await db.User.findOne({
             where: { email: data.email, tokenUser: data.tokenUser },
             raw: false,

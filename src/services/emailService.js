@@ -72,7 +72,7 @@ const sendSimpleEmail = async (dataSend) => {
     });
     console.log("Email sent successfully!");
   } catch (error) {
-    console.error("Error sending email:", error); // In lỗi chi tiết ra console
+    console.error("Error sending email:", error); 
   }
 };
 

@@ -33,7 +33,7 @@ let getTopDoctorHome = (limitInput) => {
         nest: true,
       });
 
-      //Chuyển buffer thành chuỗi
+      
       users = users.map((user) => {
         if (user.image && Buffer.isBuffer(user.image)) {
           user.image = user.image.toString("utf8");
@@ -272,7 +272,7 @@ let getDetailDoctorById = (inputId) => {
           nest: true,
         });
 
-        //convert image tu buffer sang base64
+       
         if (data && data.image) {
           data.image = Buffer.from(data.image, "base64").toString("binary");
         }
@@ -474,7 +474,7 @@ let getProfileDoctorById = (doctorId) => {
           nest: true,
         });
 
-        //convert image tu buffer sang base64
+      
         if (data && data.image) {
           data.image =  new Buffer(data.image, "base64").toString("binary");
         }
@@ -557,7 +557,7 @@ let cancelBooking = (data) => {
       let appointment = await db.Booking.findOne({
         where: {
           id: data.appointmentId,
-          statusId: "S2", // chỉ hủy nếu đang chờ xác nhận
+          statusId: "S2", 
         },
         raw: false,
       });
@@ -569,7 +569,7 @@ let cancelBooking = (data) => {
         });
       }
 
-      appointment.statusId = "S4"; // đã hủy
+      appointment.statusId = "S4"; 
       await appointment.save();
 
       return resolve({
@@ -615,7 +615,7 @@ let sendRemedy = (data) => {
         }
       );
 
-      console.log("Rows affected: ", updated);  // Log số lượng bản ghi bị thay đổi
+      console.log("Rows affected: ", updated); 
 
       if (updated === 0) {
         return resolve({

@@ -103,7 +103,7 @@ let postBookAppointment = (data) => {
 let postVerifyBookAppointment = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log("Received data:", data);  // Log dữ liệu nhận từ frontend
+      console.log("Received data:", data); 
       
       if (!data.token || !data.doctorId) {
         resolve({
@@ -118,15 +118,15 @@ let postVerifyBookAppointment = (data) => {
         });
 
         if (appointment) {
-          console.log("Found appointment, updating status...");  // Log khi tìm thấy lịch hẹn
-          appointment.statusId = "S2"; // Cập nhật trạng thái
-          await appointment.save(); // Lưu vào cơ sở dữ liệu
+          console.log("Found appointment, updating status...");  
+          appointment.statusId = "S2"; 
+          await appointment.save(); 
           resolve({
             errCode: 0,
             errMessage: "Update the appointment succeed!",
           });
         } else {
-          console.log("Appointment not found or already updated");  // Log khi không tìm thấy lịch hẹn
+          console.log("Appointment not found or already updated"); 
           resolve({
             errCode: 2,
             errMessage: "Appointment has been activated or does not exist!",
@@ -134,7 +134,7 @@ let postVerifyBookAppointment = (data) => {
         }
       }
     } catch (e) {
-      console.error("Error in updating appointment:", e);  // Log lỗi
+      console.error("Error in updating appointment:", e); 
       reject(e);
     }
   });

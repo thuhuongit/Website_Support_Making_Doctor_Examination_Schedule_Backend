@@ -23,12 +23,9 @@ let createNewUser = async (data) => {
 
             resolve ("ok create a new user ")
         } catch (e) {
-            reject(e); 
-            
+            reject(e);   
         }
-
-    })
-    
+    })   
 
 }
 
@@ -48,6 +45,7 @@ let hashUserPassword = (password) => {
     })
 }
 
+
 let getAllUser = () => {
     return new Promise ( async (resolve, reject) => {
 
@@ -64,8 +62,6 @@ let getAllUser = () => {
             
         }
     })
-
-
 }
 
 let getUserInfoById = (userId) => {
@@ -89,9 +85,9 @@ let getUserInfoById = (userId) => {
             
         }
     })
-
-
 }
+
+
 let updateUserData = (data) => {
     return new Promise(async(resolve, reject) => {
         try {
@@ -117,12 +113,12 @@ let updateUserData = (data) => {
             }
 
         } catch (e) {
-            console.log(e); 
-            
+            console.log(e);  
         }
     })
-
 }
+
+
 let deleteUserById = (userId) => {
     return new Promise(async(resolve, reject) => {
         try {
