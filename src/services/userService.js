@@ -174,7 +174,7 @@ const createNewUser = async (data) => {
             lastName: data.lastName,
             address: data.address,
             phone: data.phone,
-            gender: data.gender === 'Nam' ? '1' : data.gender === 'Nữ' ? '0' : '2',
+            gender: data.gender,
             roleId: roleId,                      
             positionId: positionId,              
             image: data.avatar || null,          
