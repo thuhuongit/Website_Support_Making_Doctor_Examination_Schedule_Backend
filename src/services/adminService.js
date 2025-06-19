@@ -2,6 +2,8 @@ const db = require("../models");
 const moment = require("moment");
 const { Sequelize } = require("sequelize");
 
+
+// Tổng doanh thu 7 ngày gần nhất 
 let getWeeklyRevenue = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -39,6 +41,7 @@ let getWeeklyRevenue = () => {
   });
 };
 
+// Tổng số người dùng mới trong ngày hôm nay 
 let getTotalNewUserDay = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -69,6 +72,8 @@ let getTotalNewUserDay = () => {
   });
 };
 
+
+// Tổng số cuộc hẹn sức khỏa đã hoàn thành 
 let getTotalHealthAppointmentDone = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -91,6 +96,7 @@ let getTotalHealthAppointmentDone = () => {
   });
 };
 
+// Tổng số bác sĩ 
 let getTotalDoctor = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -113,6 +119,7 @@ let getTotalDoctor = () => {
   });
 };
 
+// Lấy 3 bác sĩ có doanh thu cao nhất trong năm 
 let getTopThreeIdDoctorOfTheYear = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -149,6 +156,8 @@ let getTopThreeIdDoctorOfTheYear = () => {
     }
   });
 };
+
+// Lấy doanh thu theo 12 tháng của mỗi bác sĩ 
 let getTotalRevenueDoctorEachMonthByDoctorId = (doctorId) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -268,6 +277,8 @@ let getTotalRevenueDoctorEachMonthByDoctorId = (doctorId) => {
   });
 };
 
+ 
+// Lấy 3 bác sĩ có doanh thu cao nhất trong năm và doanh thu theo 12 tháng của mỗi bác sĩ 
 let getTopThreeDoctorsOfTheYear = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -316,6 +327,7 @@ let getTopThreeDoctorsOfTheYear = () => {
   });
 };
 
+// Lấy 4 bệnh nhân vip có doan thu cao nhất trong năm 
 let getTopFourVipPatient = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -360,6 +372,7 @@ let getTopFourVipPatient = () => {
   });
 };
 
+// Lấy doanh thu theo tháng của các chuyên khoa trong tháng hiện tại 
 let getMonthlyRevenueSpecialty = () => {
   return new Promise(async (resolve, reject) => {
     try {
