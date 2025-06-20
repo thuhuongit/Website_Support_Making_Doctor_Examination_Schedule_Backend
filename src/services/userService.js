@@ -25,6 +25,10 @@ let handleUserLogin = (email, password) => {
                         'firstName',
                         'lastName',
                         'image',
+                        'phone',
+                        'address',
+                        'gender',
+
                       ],
                       include: [
                         {
@@ -42,8 +46,9 @@ let handleUserLogin = (email, password) => {
 
 
                     nest: true,   
-                    raw: true
+                    raw: false
                 });
+
 
                 if (user) {
                     let check = await bcrypt.compareSync(password, user.password);
