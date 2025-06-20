@@ -39,7 +39,8 @@ let initWebRoutes = (app) => {
     router.put('/api/edit-user', userController.handleEditUser);
 
     // Màn hình Quản lý kế hoạch khám bệnh 
-    router.post("/api/bulk-create-schedule", doctorController.bulkCreateSchedule); //lưu kế hoạch khám bệnh của bác sĩ
+    router.post("/api/bulk-create-schedule", doctorController.bulkCreateSchedule);
+    router.delete("/api/delete-schedule", doctorController.deleteSchedule); // Chỉnh sửa lịch khám bệnh
 
     // Màn hình Quản lý chuyên khoa 
     router.get("/api/get-specialty", specialtyController.getAllSpecialty);

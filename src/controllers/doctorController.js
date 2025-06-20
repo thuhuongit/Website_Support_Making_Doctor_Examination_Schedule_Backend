@@ -1,4 +1,5 @@
 import doctorService from "../services/doctorService";
+const db = require("../models"); 
 
 // Lấy danh sách bác sĩ nổi bật lên trang chủ
 let getTopDoctorHome = async (req, res) => {
@@ -164,6 +165,46 @@ const getListPatientForDoctor = async (req, res) => {
 };
 
 
+// Xóa thông tin lịch khám 
+let deleteSchedule = async (req, res) => {
+  try {
+    const { doctorId, date, timeType } = req.body;
+
+    if (!doctorId || !date || !timeType) {
+      return res.status(400).json({
+        errCode: 1,
+        errMessage: "Thiếu thông tin cần thiết",
+      });
+    }
+
+    const result = await db.Schedule.destroy({
+      where: {
+        doctorId,
+        date,
+        timeType,
+      },
+    });
+
+    if (result === 0) {
+      return res.status(404).json({
+        errCode: 2,
+        errMessage: "Không tìm thấy lịch để xoá",
+      });
+    }
+
+    return res.status(200).json({
+      errCode: 0,
+      errMessage: "Xoá thành công",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      errCode: -1,
+      errMessage: "Lỗi server",
+    });
+  }
+};
+
 
 
 
@@ -209,4 +250,5 @@ module.exports = {
   getListPatientForDoctor: getListPatientForDoctor,
   sendRemedy: sendRemedy,
   cancelBooking: cancelBooking,
+  deleteSchedule, 
 };

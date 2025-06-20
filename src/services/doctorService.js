@@ -131,6 +131,7 @@ let checkRequiredFields = (inputData) => {
 };
 
 
+
 // Lưu thông tin HTML hoặc Markdown của bác sĩ 
 let saveDetailInforDoctor = (inputData) => {
   return new Promise(async (resolve, reject) => {
@@ -540,6 +541,47 @@ let getListPatientForDoctor = (doctorId, date) => {
   });
 };
 
+// Xóa thông tin lịch khám 
+let deleteSchedule = async (req, res) => {
+  try {
+    const { doctorId, date, timeType } = req.body;
+
+    // Kiểm tra đủ thông tin
+    if (!doctorId || !date || !timeType) {
+      return res.status(400).json({
+        errCode: 1,
+        errMessage: "Thiếu thông tin cần thiết",
+      });
+    }
+
+    // Xoá theo điều kiện
+    const deleted = await db.Schedule.destroy({
+      where: {
+        doctorId,
+        date,
+        timeType,
+      },
+    });
+
+    if (deleted === 0) {
+      return res.status(404).json({
+        errCode: 2,
+        errMessage: "Không tìm thấy lịch khám để xoá",
+      });
+    }
+
+    return res.status(200).json({
+      errCode: 0,
+      errMessage: "Xoá lịch khám thành công",
+    });
+  } catch (error) {
+    console.error("deleteSchedule error:", error);
+    return res.status(500).json({
+      errCode: -1,
+      errMessage: "Lỗi server",
+    });
+  }
+};
 
 // Hủy  lịch hẹn 
 let cancelBooking = (data) => {
@@ -648,4 +690,5 @@ module.exports = {
   getListPatientForDoctor: getListPatientForDoctor,
   sendRemedy: sendRemedy,
   cancelBooking: cancelBooking,
+  deleteSchedule,
 };
