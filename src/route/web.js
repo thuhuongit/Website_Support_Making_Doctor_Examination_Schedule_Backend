@@ -45,11 +45,15 @@ let initWebRoutes = (app) => {
     router.get("/api/get-specialty", specialtyController.getAllSpecialty);
     router.post("/api/create-new-specialty", upload.single("image"), specialtyController.createSpecialty); // Upload hình ảnh chỗ chuyên khoa phổ biến
     router.delete("/api/delete-specialty", specialtyController.deleteSpecialty);
-    
+    router.put('/api/edit-specialty', upload.single("image"), specialtyController.editSpecialty);
+
+
+
     // Màn hình phòng khám 
     router.get("/api/get-clinic", clinicController.getAllClinic);
     router.post("/api/create-new-clinic", upload.single("image"), clinicController.createClinic);
     router.delete("/api/delete-clinic", clinicController.deleteClinic);
+    router.put('/api/edit-clinic', upload.single("image"), clinicController.editClinic);
 
 
     // Thông tin bác sĩ 

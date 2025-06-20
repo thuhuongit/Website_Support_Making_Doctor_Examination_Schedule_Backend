@@ -21,7 +21,7 @@ let createClinic = async (req, res) => {
       image: `uploads/${imageFile.filename}`,
     }
 
-    // Gọi service để thêm chuyên khoa
+    // Gọi service để thêm phòng khám 
         const result = await clinicService.createClinic(data);
     
         // Trả về kết quả thành công
@@ -84,9 +84,62 @@ let deleteClinic = async (req, res) => {
     });
   }
 };
+
+// Sửa thông tin phòng khám theo ID
+
+let editClinic = async (req, res) => {
+  try {
+    const { id, name, address, description } = req.body;
+    const imageFile = req.file; 
+
+    if (!id || !name || !address || !description) {
+      return res.status(400).json({
+        errCode: 1,
+        errMessage: "Thiếu thông tin bắt buộc!",
+      });
+    }
+
+    const data = {
+      id,
+      name,
+      address,
+      description,
+    };
+
+    if (imageFile) {
+      data.image = `uploads/${imageFile.filename}`;
+    }
+
+    const result = await clinicService.editClinic(data);
+
+    if (result && result.errCode === 0) {
+      return res.status(200).json({
+        errCode: 0,
+        message: "Sửa phòng khám thành công!",
+        data: result.data || null,
+      });
+    } else {
+      return res.status(500).json({
+        errCode: result.errCode || -1,
+        errMessage: result.errMessage || "Có lỗi xảy ra khi sửa phòng khám!",
+      });
+    }
+
+  } catch (e) {
+    console.error("Lỗi editClinic:", e);
+    return res.status(500).json({
+      errCode: -1,
+      errMessage: "Lỗi server nội bộ!",
+    });
+  }
+};
+
+
 module.exports = {
   createClinic: createClinic,
   getAllClinic: getAllClinic,
   getDetailClinicById: getDetailClinicById,
   deleteClinic, 
+  editClinic, 
+
 };

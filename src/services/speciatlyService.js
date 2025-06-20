@@ -126,9 +126,55 @@ let deleteSpecialty = (id) => {
   });
 };
 
+// Sửa chuyên khoa theo ID
+let editSpecialty = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { id, name, descriptionMarkdown, descriptionHTML, image } = data;
+
+      if (!id || !name || !descriptionMarkdown || !descriptionHTML) {
+        return resolve({
+          errCode: 1,
+          errMessage: "Missing required parameters",
+        });
+      }
+
+      const specialty = await db.Specialty.findOne({ where: { id } });
+      if (!specialty) {
+        return resolve({
+          errCode: 1,
+          errMessage: "Specialty not found",
+        });
+      }
+
+      await db.Specialty.update(
+        {
+          name,
+          descriptionMarkdown,
+          descriptionHTML,
+          ...(image && { image }),
+        },
+        { where: { id } }
+      );
+
+      return resolve({
+        errCode: 0,
+        errMessage: "Update specialty success",
+      });
+    } catch (error) {
+      console.error("editSpecialty service error:", error);
+      return reject(error);
+    }
+  });
+};
+
+
+
+
 module.exports = {
   createSpecialty: createSpecialty,
   getAllSpecialty: getAllSpecialty,
   getDetailSpecialtyById: getDetailSpecialtyById,
   deleteSpecialty: deleteSpecialty, 
+  editSpecialty, 
 };

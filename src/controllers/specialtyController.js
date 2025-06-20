@@ -90,9 +90,47 @@ let deleteSpecialty = async (req, res) => {
   }
 };
 
+// Sửa thông tin chuyên khoa theo ID
+let editSpecialty = async (req, res) => {
+  try {
+    const { id, name, descriptionMarkdown, descriptionHTML } = req.body;
+    const imageFile = req.file;
+
+    // Kiểm tra các thông tin bắt buộc
+    if (!id || !name || !descriptionMarkdown || !descriptionHTML) {
+      return res.status(400).json({
+        errCode: 1,
+        errMessage: "Thiếu thông tin bắt buộc!",
+      });
+    }
+
+    const data = {
+      id,
+      name,
+      descriptionMarkdown,
+      descriptionHTML,
+    };
+
+    if (imageFile) {
+      data.image = `uploads/${imageFile.filename}`; 
+    }
+
+    const result = await specialtyService.editSpecialty(data);
+
+    return res.status(200).json(result);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({
+      errCode: -1,
+      errMessage: "Lỗi server",
+    });
+  }
+};
+
 module.exports = {
   createSpecialty: createSpecialty,
   getAllSpecialty: getAllSpecialty,
   getDetailSpecialtyById: getDetailSpecialtyById,
   deleteSpecialty: deleteSpecialty,
+  editSpecialty, 
 };

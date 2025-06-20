@@ -119,9 +119,58 @@ let deleteClinic = (id) => {
   });
 };
 
+// Sửa phòng khám theo ID
+let editClinic = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const { id, name, address, description, image } = data;
+
+      if (!id || !name || !address || !description) {
+        return resolve({
+          errCode: 1,
+          errMessage: "Missing required parameters",
+        });
+      }
+
+      // Kiểm tra clinic tồn tại
+      const clinic = await db.Clinic.findOne({ where: { id } });
+      if (!clinic) {
+        return resolve({
+          errCode: 2,
+          errMessage: "Clinic not found",
+        });
+      }
+
+      // Cập nhật
+      await db.Clinic.update(
+        {
+          name,
+          address,
+          description,
+          ...(image && { image }),
+        },
+        { where: { id } }
+      );
+
+      return resolve({
+        errCode: 0,
+        errMessage: "Update clinic success",
+      });
+
+    } catch (e) {
+      console.error("editClinic service error:", e);
+      return reject({
+        errCode: -1,
+        errMessage: "Unexpected error during update clinic.",
+      });
+    }
+  });
+};
+
 module.exports = {
   createClinic: createClinic,
   getAllClinic: getAllClinic,
   getDetailClinicById: getDetailClinicById,
   deleteClinic, 
+  editClinic, 
 };
