@@ -62,6 +62,10 @@ let initWebRoutes = (app) => {
     router.post("/api/save-infor-doctors", doctorController.postInforDoctor);
     router.get("/api/get-all-doctor-infos", doctorController.getAllDoctorInfos);
     router.delete("/api/delete-doctor", doctorController.deleteDoctor); 
+    router.put('/api/edit-doctor', doctorController.editDoctor);
+    router.get('/get-markdown', doctorController.getMarkdownByDoctorId);
+
+
 
     
 

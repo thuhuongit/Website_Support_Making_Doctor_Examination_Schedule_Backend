@@ -51,7 +51,6 @@ let getTopDoctorHome = (limitInput) => {
   });
 };
 
-
 // Lấy tất cả danh sách bác sĩ 
 let getAllDoctors = () => {
   return new Promise(async (resolve, reject) => {
@@ -120,15 +119,9 @@ let getAllDoctorInfos = async () => {
           attributes: ["name"]
         },
         {
-          model: db.Allcode,
-          as: "priceTypeData",
-          attributes: ["valueVi"]
-        },
-        {
-          model: db.Allcode,
-          as: "provinceTypeData",
-          attributes: ["valueVi"]
-        },
+          model: db.Markdown,
+          attributes: ["contentHTML", "contentMarkdown", "description"]
+        }
 
       ],
       raw: false,
@@ -152,6 +145,7 @@ let getAllDoctorInfos = async () => {
 
 
 let checkRequiredFields = (inputData) => {
+  if (inputData.action === "CREATE") {
   let arrFields = [
     "doctorId",
     "contentHTML",
@@ -159,7 +153,7 @@ let checkRequiredFields = (inputData) => {
     "action",
     "selectedPrice",
     "selectedPayment",
-    "selectedProvice",
+    "selectedProvince",
     "nameClinic",
     "addressClinic",
     "note",
@@ -167,108 +161,141 @@ let checkRequiredFields = (inputData) => {
     "description",
   ];
 
-  let isValid = true;
-  let element = "";
-  for (let i = 0; i < arrFields.length; i++) {
-    if (!inputData[arrFields[i]]) {
-      isValid = false;
-      element = arrFields[i];
-      break;
+  for (let field of arrFields) {
+    if (!inputData[field]) {
+      return {
+        isValid: false,
+        element: field,
+      };  
     }
   }
+  }
   return {
-    isValid: isValid,
-    element: element,
+    isValid: true,
+    element: "",
   };
 };
 
 
-
-// Lưu thông tin HTML hoặc Markdown của bác sĩ 
 let saveDetailInforDoctor = (inputData) => {
   return new Promise(async (resolve, reject) => {
     try {
+      // Gán mặc định nếu không truyền
+      if (!inputData.selectedPrice) inputData.selectedPrice = "100.000";
+      if (!inputData.selectedPayment) inputData.selectedPayment = "cash";
+      if (!inputData.selectedProvince) inputData.selectedProvince = "hanoi";
+
+      // Kiểm tra đủ thông tin cần thiết
       let checkObj = checkRequiredFields(inputData);
-      if (checkObj.isValid === false) {
-        resolve({
+      if (!checkObj.isValid) {
+        return resolve({
           errCode: 1,
           errMessage: `Missing parameter: ${checkObj.element}`,
         });
-      } else {
-        //upsert to Markdown
-        if (inputData.action === "CREATE") {
-          await db.Markdown.create({
-            contentHTML: inputData.contentHTML,
-            contentMarkdown: inputData.contentMarkdown,
-            description: inputData.description,
-            doctorId: inputData.doctorId,
-            specialtyId: inputData.specialtyId,
-            clinicId: inputData.clinicId,
-          });
-        } else if (inputData.action === "EDIT") {
-          let doctorMarkdown = await db.Markdown.findOne({
-            where: { doctorId: inputData.doctorId },
-            raw: false,
-          });
-
-          if (doctorMarkdown) {
-            doctorMarkdown.contentHTML = inputData.contentHTML;
-            doctorMarkdown.contentMarkdown = inputData.contentMarkdown;
-            doctorMarkdown.description = inputData.description;
-            doctorMarkdown.doctorId = inputData.doctorId;
-            doctorMarkdown.specialtyId = inputData.specialtyId;
-            doctorMarkdown.clinicId = inputData.clinicId;
-            // doctorMarkdown.updatedAt = new Date();
-            await doctorMarkdown.save();
-          }
-        }
-
-        //upsert to Doctor_infor tabel
-        let doctorInfor = await db.Doctor_Infor.findOne({
-          where: {
-            doctorId: inputData.doctorId,
-          },
-          raw: false,
-        });
-
-        if (doctorInfor) {
-          //update
-          doctorInfor.doctorId = inputData.doctorId;
-          doctorInfor.priceId = inputData.selectedPrice;
-          doctorInfor.provinceId = inputData.selectedProvice;
-          doctorInfor.paymentId = inputData.selectedPayment;
-          doctorInfor.nameClinic = inputData.nameClinic;
-          doctorInfor.addressClinic = inputData.addressClinic;
-          doctorInfor.note = inputData.note;
-          doctorInfor.specialtyId = inputData.specialtyId;
-          doctorInfor.clinicId = inputData.clinicId;
-          doctorInfor.count = (doctorInfor.count || 0) + 1;
-
-          await doctorInfor.save();
-        } else {
-          //create
-          await db.Doctor_Infor.create({
-            doctorId: inputData.doctorId,
-            priceId: inputData.selectedPrice,
-            provinceId: inputData.selectedProvice,
-            paymentId: inputData.selectedPayment,
-            nameClinic: inputData.nameClinic,
-            addressClinic: inputData.addressClinic,
-            note: inputData.note,
-            specialtyId: inputData.specialtyId,
-            clinicId: inputData.clinicId,
-            count: 1, 
-          });
-        }
-        resolve({
-          errCode: 0,
-          errMessage: "Save infor doctor succeed!",
-        });
       }
+
+      // ======= MARKDOWN =======
+      let doctorMarkdown = await db.Markdown.findOne({
+        where: { doctorId: inputData.doctorId },
+        raw: false,
+      });
+
+      if (!doctorMarkdown) {
+        // CREATE
+        await db.Markdown.create({
+          contentHTML: inputData.contentHTML,
+          contentMarkdown: inputData.contentMarkdown,
+          description: inputData.description,
+          doctorId: inputData.doctorId,
+          specialtyId: inputData.specialtyId,
+          clinicId: inputData.clinicId,
+        });
+      } else {
+        // UPDATE
+        doctorMarkdown.contentHTML = inputData.contentHTML;
+        doctorMarkdown.contentMarkdown = inputData.contentMarkdown;
+        doctorMarkdown.description = inputData.description;
+        doctorMarkdown.specialtyId = inputData.specialtyId;
+        doctorMarkdown.clinicId = inputData.clinicId;
+        await doctorMarkdown.save();
+      }
+
+      // ======= DOCTOR_INFOR =======
+      let doctorInfor = await db.Doctor_Infor.findOne({
+        where: {
+          doctorId: inputData.doctorId,
+        },
+        raw: false,
+      });
+
+      if (!doctorInfor) {
+        // CREATE
+        await db.Doctor_Infor.create({
+          doctorId: inputData.doctorId,
+          priceId: inputData.selectedPrice,
+          provinceId: inputData.selectedProvince,
+          paymentId: inputData.selectedPayment,
+          nameClinic: inputData.nameClinic,
+          addressClinic: inputData.addressClinic,
+          note: inputData.note,
+          specialtyId: inputData.specialtyId,
+          clinicId: inputData.clinicId,
+          count: 1,
+        });
+      } else {
+        // UPDATE
+        doctorInfor.priceId = inputData.selectedPrice;
+        doctorInfor.provinceId = inputData.selectedProvince;
+        doctorInfor.paymentId = inputData.selectedPayment;
+        doctorInfor.nameClinic = inputData.nameClinic;
+        doctorInfor.addressClinic = inputData.addressClinic;
+        doctorInfor.note = inputData.note;
+        doctorInfor.specialtyId = inputData.specialtyId;
+        doctorInfor.clinicId = inputData.clinicId;
+        doctorInfor.count = (doctorInfor.count || 0) + 1;
+        await doctorInfor.save();
+      }
+
+      return resolve({
+        errCode: 0,
+        errMessage: "Save infor doctor succeed!",
+      });
     } catch (e) {
-      reject(e);
+      console.error("Error in saveDetailInforDoctor:", e);
+      return reject(e);
     }
   });
+};
+
+let getMarkdownByDoctorId = async (doctorId) => {
+  try {
+    if (!doctorId) {
+      return {
+        errCode: 1,
+        errMessage: "Missing doctorId",
+      };
+    }
+
+    let markdown = await db.Markdown.findOne({
+      where: { doctorId },
+    });
+
+    if (!markdown) {
+      return {
+        errCode: 2,
+        errMessage: "Not found markdown",
+        data: {},
+      };
+    }
+
+    return {
+      errCode: 0,
+      data: markdown,
+    };
+  } catch (error) {
+    console.error("getMarkdownByDoctorId service error:", error);
+    throw error;
+  }
 };
 
 
@@ -376,6 +403,77 @@ let deleteDoctor = (id) => {
   });
 };
 
+// Sửa thông tin doctor theo id
+let editDoctor = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const {
+        id, doctorId, specialtyId, clinicId, priceId,
+        provinceId, paymentId, addressClinic, nameClinic, note,
+        contentHTML, contentMarkdown
+      } = data;
+
+      if (!id || !doctorId) {
+        return resolve({
+          errCode: 1,
+          errMessage: "Thiếu ID hoặc doctorId",
+        });
+      }
+
+      // Update bảng Doctor_Infor
+      const doctor = await db.Doctor_Infor.findOne({ where: { id } });
+      if (!doctor) {
+        return resolve({
+          errCode: 1,
+          errMessage: "Không tìm thấy thông tin doctor",
+        });
+      }
+
+      let updateData = {};
+      if (specialtyId) updateData.specialtyId = specialtyId;
+      if (clinicId) updateData.clinicId = clinicId;
+      if (priceId) updateData.priceId = priceId;
+      if (provinceId) updateData.provinceId = provinceId;
+      if (paymentId) updateData.paymentId = paymentId;
+      if (addressClinic) updateData.addressClinic = addressClinic;
+      if (nameClinic) updateData.nameClinic = nameClinic;
+      if (note) updateData.note = note;
+
+      await db.Doctor_Infor.update(updateData, { where: { id } });
+
+      // Update bảng Markdown nếu có truyền dữ liệu
+      if (description || contentHTML || contentMarkdown) {
+        const markdown = await db.Markdown.findOne({ where: { doctorId } });
+
+        if (markdown) {
+          await db.Markdown.update(
+            {
+              ...(description && {description}),
+              ...(contentHTML && { contentHTML }),
+              ...(contentMarkdown && { contentMarkdown })
+            },
+            { where: { doctorId } }
+          );
+        } else {
+          await db.Markdown.create({
+            doctorId,
+            description: description || '',
+            contentHTML: contentHTML || '',
+            contentMarkdown: contentMarkdown || ''
+          });
+        }
+      }
+
+      return resolve({
+        errCode: 0,
+        errMessage: "Cập nhật thành công!",
+      });
+    } catch (error) {
+      console.error("editDoctor service error:", error);
+      return reject(error);
+    }
+  });
+};
 
 
 
@@ -768,7 +866,9 @@ module.exports = {
   getTopDoctorHome: getTopDoctorHome,
   getAllDoctors: getAllDoctors,
   getAllDoctorInfos, 
+  editDoctor,
   deleteDoctor,
+  getMarkdownByDoctorId,
   saveDetailInforDoctor: saveDetailInforDoctor,
   getDetailDoctorById: getDetailDoctorById,
   bulkCreateSchedule: bulkCreateSchedule,

@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Doctor_Infor.belongsTo(models.User, { foreignKey: "doctorId", as: "doctorData"});
       Doctor_Infor.belongsTo(models.Clinic, {foreignKey: "clinicId", as: "clinicData"});
+      Doctor_Infor.hasOne(models.Markdown, { foreignKey: 'doctorId' });
 
       Doctor_Infor.belongsTo(models.Allcode, {
         foreignKey: "priceId",

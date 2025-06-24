@@ -51,7 +51,7 @@ let getAllDoctorInfos = async (req, res) => {
   return res.status(200).json(result);
 };
 
-
+// Xóa thông tin doctor theo id
 let deleteDoctor = async (req, res) => {
   try {
     const { id } = req.query;
@@ -66,7 +66,59 @@ let deleteDoctor = async (req, res) => {
   }
 };
 
+// Sửa thông tin doctor theo id
+let editDoctor = async (req, res) => {
+  try {
+    const { id, doctorId, specialtyId, clinicId, priceId, provinceId, paymentId, addressClinic, nameClinic, note, contentMarkdown, contentHTML } = req.body;
 
+    // Kiểm tra các thông tin bắt buộc
+    if (!id || !doctorId || !specialtyId || !clinicId || !priceId || !provinceId || !paymentId || !addressClinic || !nameClinic || !note || !contentMarkdown || !contentHTML) {
+      return res.status(400).json({
+        errCode: 1,
+        errMessage: "Thiếu thông tin bắt buộc!",
+      });
+    }
+
+    const data = {
+      id,
+      doctorId,
+      specialtyId, 
+      clinicId,
+      priceId,
+      provinceId, 
+      paymentId, 
+      addressClinic, 
+      nameClinic, 
+      note,
+      contentMarkdown,
+      contentHTML,
+    };
+
+    const result = await doctorService.editDoctor(data);
+
+    return res.status(200).json(result);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({
+      errCode: -1,
+      errMessage: "Lỗi server",
+    });
+  }
+};
+
+let getMarkdownByDoctorId = async (req, res) => {
+  try {
+    let doctorId = req.query.doctorId;
+    let result = await doctorService.getMarkdownByDoctorId(doctorId);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.error("getMarkdownByDoctorId controller error:", error);
+    return res.status(500).json({
+      errCode: -1,
+      errMessage: "Server error",
+    });
+  }
+};
 
 
 // Lấy thông tin chi tiết bác sĩ theo id lên giao diện 
@@ -265,7 +317,9 @@ module.exports = {
   getAllDoctors: getAllDoctors,
   getAllDoctorInfos,
   postInforDoctor: postInforDoctor,
+  editDoctor,
   deleteDoctor,
+  getMarkdownByDoctorId,
   getDetailDoctorById: getDetailDoctorById,
   bulkCreateSchedule: bulkCreateSchedule,
   getScheduleByDate: getScheduleByDate,
