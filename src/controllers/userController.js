@@ -1,5 +1,8 @@
 import userService from "../services/userService";
 
+const multer = require("multer");
+const upload = multer(); // dùng memory storage
+
 let handleLogin = async function (req, res) {
     let email = req.body.email;
     console.log('your email: ' + email)
@@ -88,12 +91,22 @@ let handleCreateNewUser = async (req, res) => {
 
 
 // Cập nhật thông tin ngưới dùng 
-let handleEditUser = async(req, res) => {
-    let data = req.body;
-    let message = await userService.updateUserData(data);
-    return res.status(200).json(message);
-    
-}
+let handleEditUser = async (req, res) => {
+    try {
+        // Parse dữ liệu từ FormData
+        const data = req.body;
+
+        // Nếu có file ảnh
+        if (req.file) {
+            data.avatar = req.file.buffer.toString("base64");
+        }
+
+        let message = await userService.updateUserData(data);
+        return res.status(200).json(message);
+    } catch (error) {
+        return res.status(500).json({ errCode: -1, errMessage: "Server error" });
+    }
+};
 
 
 // Xóa người dùng 
