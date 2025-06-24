@@ -60,6 +60,8 @@ let initWebRoutes = (app) => {
     // Thông tin bác sĩ 
     router.get("/api/get-all-doctors", doctorController.getAllDoctors);
     router.post("/api/save-infor-doctors", doctorController.postInforDoctor);
+    router.get("/api/get-all-doctor-infos", doctorController.getAllDoctorInfos);
+
     
 
 

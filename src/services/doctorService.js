@@ -99,6 +99,58 @@ let getAllDoctors = () => {
   });
 };
 
+
+let getAllDoctorInfos = async () => {
+  try {
+    const result = await db.Doctor_Infor.findAll({
+      include: [
+        {
+          model: db.User,
+          as: "doctorData",
+          attributes: ["firstName", "lastName"]
+        },
+        {
+          model: db.Specialty,
+          as: "specialtyData",
+          attributes: ["name"]
+        },
+        {
+          model: db.Clinic,
+          as: "clinicData",
+          attributes: ["name"]
+        },
+        {
+          model: db.Allcode,
+          as: "priceTypeData",
+          attributes: ["valueVi"]
+        },
+        {
+          model: db.Allcode,
+          as: "provinceTypeData",
+          attributes: ["valueVi"]
+        },
+
+      ],
+      raw: false,
+      nest: true
+    });
+
+    return {
+      errCode: 0,
+      data: result.map(item => item.get({ plain: true }))
+    };
+  } catch (e) {
+    console.error("Error getAllDoctorInfos:", e);
+    return {
+      errCode: -1,
+      errMessage: "Lỗi server"
+    };
+  }
+};
+
+
+
+
 let checkRequiredFields = (inputData) => {
   let arrFields = [
     "doctorId",
@@ -681,6 +733,7 @@ let sendRemedy = (data) => {
 module.exports = {
   getTopDoctorHome: getTopDoctorHome,
   getAllDoctors: getAllDoctors,
+  getAllDoctorInfos, 
   saveDetailInforDoctor: saveDetailInforDoctor,
   getDetailDoctorById: getDetailDoctorById,
   bulkCreateSchedule: bulkCreateSchedule,

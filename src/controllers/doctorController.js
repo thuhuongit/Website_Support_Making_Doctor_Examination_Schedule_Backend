@@ -46,6 +46,14 @@ let postInforDoctor = async (req, res) => {
   }
 };
 
+let getAllDoctorInfos = async (req, res) => {
+  const result = await doctorService.getAllDoctorInfos();
+  return res.status(200).json(result);
+};
+
+
+
+
 
 // Lấy thông tin chi tiết bác sĩ theo id lên giao diện 
 let getDetailDoctorById = async (req, res) => {
@@ -241,6 +249,7 @@ let cancelBooking = async (req, res) => {
 module.exports = {
   getTopDoctorHome: getTopDoctorHome,
   getAllDoctors: getAllDoctors,
+  getAllDoctorInfos,
   postInforDoctor: postInforDoctor,
   getDetailDoctorById: getDetailDoctorById,
   bulkCreateSchedule: bulkCreateSchedule,
