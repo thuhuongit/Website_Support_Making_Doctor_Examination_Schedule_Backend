@@ -52,6 +52,20 @@ let getAllDoctorInfos = async (req, res) => {
 };
 
 
+let deleteDoctor = async (req, res) => {
+  try {
+    const { id } = req.query;
+    const response = await doctorService.deleteDoctor(id);
+    return res.status(200).json(response);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({
+      errCode: -1,
+      errMessage: "Error from server",
+    });
+  }
+};
+
 
 
 
@@ -251,6 +265,7 @@ module.exports = {
   getAllDoctors: getAllDoctors,
   getAllDoctorInfos,
   postInforDoctor: postInforDoctor,
+  deleteDoctor,
   getDetailDoctorById: getDetailDoctorById,
   bulkCreateSchedule: bulkCreateSchedule,
   getScheduleByDate: getScheduleByDate,

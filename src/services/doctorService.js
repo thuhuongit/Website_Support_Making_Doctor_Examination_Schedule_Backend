@@ -346,6 +346,40 @@ let getDetailDoctorById = (inputId) => {
   });
 };
 
+let deleteDoctor = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!id) {
+        return resolve({
+          errCode: 1,
+          errMessage: "Missing doctor id",
+        });
+      }
+
+      const doctor = await db.Doctor_Infor.findOne({ where: { id } });
+      if (!doctor) {
+        return resolve({
+          errCode: 2,
+          errMessage: "Doctor not found",
+        });
+      }
+
+      await db.Doctor_Infor.destroy({ where: { id } });
+
+      return resolve({
+        errCode: 0,
+        errMessage: "Delete doctor success",
+      });
+    } catch (e) {
+      return reject(e);
+    }
+  });
+};
+
+
+
+
+
 //Lưu lịch khám cho bác sĩ (Bảng Schedule)
 let bulkCreateSchedule = (data) => {
   return new Promise(async (resolve, reject) => {
@@ -734,6 +768,7 @@ module.exports = {
   getTopDoctorHome: getTopDoctorHome,
   getAllDoctors: getAllDoctors,
   getAllDoctorInfos, 
+  deleteDoctor,
   saveDetailInforDoctor: saveDetailInforDoctor,
   getDetailDoctorById: getDetailDoctorById,
   bulkCreateSchedule: bulkCreateSchedule,
