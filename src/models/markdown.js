@@ -12,7 +12,8 @@ module.exports = (sequelize, DataTypes) => {
       Markdown.belongsTo(models.User, { foreignKey: "doctorId", as: "doctorData" });
       Markdown.belongsTo(models.Specialty, { foreignKey: "specialtyId", as: "specialtyData" });
       Markdown.belongsTo(models.Clinic, { foreignKey: "clinicId", as: "clinicData" });
-      Markdown.belongsTo(models.Doctor_Infor, { foreignKey: 'doctorId' });
+      Markdown.belongsTo(models.Doctor_Infor, { foreignKey: 'doctorId', as: 'doctorInfor' });
+
     }
   }
   Markdown.init(

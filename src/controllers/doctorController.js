@@ -66,37 +66,52 @@ let deleteDoctor = async (req, res) => {
   }
 };
 
-// Sửa thông tin doctor theo id
+
 let editDoctor = async (req, res) => {
   try {
-    const { id, doctorId, specialtyId, clinicId, priceId, provinceId, paymentId, addressClinic, nameClinic, note, contentMarkdown, contentHTML } = req.body;
+    const {
+      id,
+      doctorId,
+      specialtyId,
+      clinicId,
+      priceId,
+      provinceId,
+      paymentId,
+      addressClinic,
+      nameClinic,
+      note,
+      contentMarkdown,
+      contentHTML,
+      description,
+    } = req.body;
 
-    // Kiểm tra các thông tin bắt buộc
-    if (!id || !doctorId || !specialtyId || !clinicId || !priceId || !provinceId || !paymentId || !addressClinic || !nameClinic || !note || !contentMarkdown || !contentHTML) {
+    // Chỉ bắt buộc ID để xác định thông tin
+    if (!id || !doctorId) {
       return res.status(400).json({
         errCode: 1,
-        errMessage: "Thiếu thông tin bắt buộc!",
+        errMessage: "Thiếu ID hoặc doctorId!",
       });
     }
 
     const data = {
       id,
       doctorId,
-      specialtyId, 
+      specialtyId,
       clinicId,
       priceId,
-      provinceId, 
-      paymentId, 
-      addressClinic, 
-      nameClinic, 
+      provinceId,
+      paymentId,
+      addressClinic,
+      nameClinic,
       note,
       contentMarkdown,
       contentHTML,
+      description,
     };
 
     const result = await doctorService.editDoctor(data);
-
     return res.status(200).json(result);
+
   } catch (e) {
     console.error(e);
     return res.status(500).json({
@@ -106,19 +121,8 @@ let editDoctor = async (req, res) => {
   }
 };
 
-let getMarkdownByDoctorId = async (req, res) => {
-  try {
-    let doctorId = req.query.doctorId;
-    let result = await doctorService.getMarkdownByDoctorId(doctorId);
-    return res.status(200).json(result);
-  } catch (error) {
-    console.error("getMarkdownByDoctorId controller error:", error);
-    return res.status(500).json({
-      errCode: -1,
-      errMessage: "Server error",
-    });
-  }
-};
+
+
 
 
 // Lấy thông tin chi tiết bác sĩ theo id lên giao diện 
@@ -319,7 +323,6 @@ module.exports = {
   postInforDoctor: postInforDoctor,
   editDoctor,
   deleteDoctor,
-  getMarkdownByDoctorId,
   getDetailDoctorById: getDetailDoctorById,
   bulkCreateSchedule: bulkCreateSchedule,
   getScheduleByDate: getScheduleByDate,

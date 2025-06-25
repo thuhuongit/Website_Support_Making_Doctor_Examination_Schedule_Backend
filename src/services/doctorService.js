@@ -120,6 +120,7 @@ let getAllDoctorInfos = async () => {
         },
         {
           model: db.Markdown,
+          as: "markdown",
           attributes: ["contentHTML", "contentMarkdown", "description"]
         }
 
@@ -203,18 +204,18 @@ let saveDetailInforDoctor = (inputData) => {
       if (!doctorMarkdown) {
         // CREATE
         await db.Markdown.create({
-          contentHTML: inputData.contentHTML,
-          contentMarkdown: inputData.contentMarkdown,
-          description: inputData.description,
+          contentHTML: inputData.contentHTML || '',
+          contentMarkdown: inputData.contentMarkdown || '',
+          description: inputData.description || '',
           doctorId: inputData.doctorId,
           specialtyId: inputData.specialtyId,
           clinicId: inputData.clinicId,
         });
       } else {
         // UPDATE
-        doctorMarkdown.contentHTML = inputData.contentHTML;
-        doctorMarkdown.contentMarkdown = inputData.contentMarkdown;
-        doctorMarkdown.description = inputData.description;
+        doctorMarkdown.contentHTML = inputData.contentHTML || doctorMarkdown.contentHTML;
+        doctorMarkdown.contentMarkdown = inputData.contentMarkdown || doctorMarkdown.contentMarkdown;
+        doctorMarkdown.description = inputData.description || doctorMarkdown.description;
         doctorMarkdown.specialtyId = inputData.specialtyId;
         doctorMarkdown.clinicId = inputData.clinicId;
         await doctorMarkdown.save();
@@ -265,37 +266,6 @@ let saveDetailInforDoctor = (inputData) => {
       return reject(e);
     }
   });
-};
-
-let getMarkdownByDoctorId = async (doctorId) => {
-  try {
-    if (!doctorId) {
-      return {
-        errCode: 1,
-        errMessage: "Missing doctorId",
-      };
-    }
-
-    let markdown = await db.Markdown.findOne({
-      where: { doctorId },
-    });
-
-    if (!markdown) {
-      return {
-        errCode: 2,
-        errMessage: "Not found markdown",
-        data: {},
-      };
-    }
-
-    return {
-      errCode: 0,
-      data: markdown,
-    };
-  } catch (error) {
-    console.error("getMarkdownByDoctorId service error:", error);
-    throw error;
-  }
 };
 
 
@@ -404,78 +374,73 @@ let deleteDoctor = (id) => {
 };
 
 // Sửa thông tin doctor theo id
-let editDoctor = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const {
-        id, doctorId, specialtyId, clinicId, priceId,
-        provinceId, paymentId, addressClinic, nameClinic, note,
-        contentHTML, contentMarkdown
-      } = data;
+let editDoctor = async (data) => {
+  try {
+    const {
+      doctorId,
+      specialtyId,
+      clinicId,
+      priceId,
+      provinceId,
+      paymentId,
+      addressClinic,
+      nameClinic,
+      note,
+      contentMarkdown,
+      contentHTML,
+      description,
+    } = data;
 
-      if (!id || !doctorId) {
-        return resolve({
-          errCode: 1,
-          errMessage: "Thiếu ID hoặc doctorId",
-        });
-      }
+    // Cập nhật bảng Doctor_Infor
+    let doctorInfo = await db.Doctor_Infor.findOne({ where: { doctorId } });
 
-      // Update bảng Doctor_Infor
-      const doctor = await db.Doctor_Infor.findOne({ where: { id } });
-      if (!doctor) {
-        return resolve({
-          errCode: 1,
-          errMessage: "Không tìm thấy thông tin doctor",
-        });
-      }
-
-      let updateData = {};
-      if (specialtyId) updateData.specialtyId = specialtyId;
-      if (clinicId) updateData.clinicId = clinicId;
-      if (priceId) updateData.priceId = priceId;
-      if (provinceId) updateData.provinceId = provinceId;
-      if (paymentId) updateData.paymentId = paymentId;
-      if (addressClinic) updateData.addressClinic = addressClinic;
-      if (nameClinic) updateData.nameClinic = nameClinic;
-      if (note) updateData.note = note;
-
-      await db.Doctor_Infor.update(updateData, { where: { id } });
-
-      // Update bảng Markdown nếu có truyền dữ liệu
-      if (description || contentHTML || contentMarkdown) {
-        const markdown = await db.Markdown.findOne({ where: { doctorId } });
-
-        if (markdown) {
-          await db.Markdown.update(
-            {
-              ...(description && {description}),
-              ...(contentHTML && { contentHTML }),
-              ...(contentMarkdown && { contentMarkdown })
-            },
-            { where: { doctorId } }
-          );
-        } else {
-          await db.Markdown.create({
-            doctorId,
-            description: description || '',
-            contentHTML: contentHTML || '',
-            contentMarkdown: contentMarkdown || ''
-          });
-        }
-      }
-
-      return resolve({
-        errCode: 0,
-        errMessage: "Cập nhật thành công!",
-      });
-    } catch (error) {
-      console.error("editDoctor service error:", error);
-      return reject(error);
+    if (!doctorInfo) {
+      return {
+        errCode: 2,
+        errMessage: "Không tìm thấy Doctor_Infor",
+      };
     }
-  });
+
+    doctorInfo.specialtyId = specialtyId || doctorInfo.specialtyId;
+    doctorInfo.clinicId = clinicId || doctorInfo.clinicId;
+    doctorInfo.priceId = priceId || doctorInfo.priceId;
+    doctorInfo.provinceId = provinceId || doctorInfo.provinceId;
+    doctorInfo.paymentId = paymentId || doctorInfo.paymentId;
+    doctorInfo.addressClinic = addressClinic || doctorInfo.addressClinic;
+    doctorInfo.nameClinic = nameClinic || doctorInfo.nameClinic;
+    doctorInfo.note = note || doctorInfo.note;
+
+    await doctorInfo.save();
+
+    // Cập nhật bảng Markdown
+    let markdown = await db.Markdown.findOne({ where: { doctorId } });
+
+    if (!markdown) {
+      return {
+        errCode: 3,
+        errMessage: "Không tìm thấy Markdown",
+      };
+    }
+
+    markdown.contentHTML = contentHTML || markdown.contentHTML;
+    markdown.contentMarkdown = contentMarkdown || markdown.contentMarkdown;
+    markdown.description = description || markdown.description;
+
+    await markdown.save();
+
+    return {
+      errCode: 0,
+      errMessage: "Cập nhật thông tin bác sĩ thành công!",
+    };
+
+  } catch (err) {
+    console.error("Edit doctor failed:", err);
+    return {
+      errCode: -1,
+      errMessage: "Đã xảy ra lỗi khi cập nhật thông tin bác sĩ.",
+    };
+  }
 };
-
-
 
 
 //Lưu lịch khám cho bác sĩ (Bảng Schedule)
@@ -868,7 +833,6 @@ module.exports = {
   getAllDoctorInfos, 
   editDoctor,
   deleteDoctor,
-  getMarkdownByDoctorId,
   saveDetailInforDoctor: saveDetailInforDoctor,
   getDetailDoctorById: getDetailDoctorById,
   bulkCreateSchedule: bulkCreateSchedule,
