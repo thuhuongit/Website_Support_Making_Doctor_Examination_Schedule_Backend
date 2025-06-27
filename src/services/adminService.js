@@ -1,6 +1,7 @@
 const db = require("../models");
 const moment = require("moment");
 const { Sequelize } = require("sequelize");
+const { Op } = require("sequelize");
 
 
 // Tổng doanh thu 7 ngày gần nhất 
@@ -45,32 +46,31 @@ let getWeeklyRevenue = () => {
 let getTotalNewUserDay = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      let currentDate = moment(new Date()).format("YYYY-MM-DD");
-      let users = await db.User.findAll({
-        // where: { createdAt==currentDate},
-        // order: [["createdAt", "DESC"]],
+      const startOfDay = moment().startOf("day").toDate();
+      const endOfDay = moment().endOf("day").toDate();
+
+      const users = await db.User.findAll({
+        where: {
+          createdAt: {
+            [Op.gte]: startOfDay,
+            [Op.lte]: endOfDay,
+          },
+        },
         attributes: ["id", "createdAt"],
         raw: true,
-        nest: true,
       });
-
-      users.map((item) => {
-        item.createdAt = moment(item.createdAt).format("YYYY-MM-DD");
-        return item;
-      });
-      users = users.filter((item) => item.createdAt == currentDate);
-
-      let totalNewUserDay = users.length;
 
       resolve({
         errCode: 0,
-        data: { totalNewUserDay: totalNewUserDay },
+        data: { totalNewUserDay: users.length },
       });
     } catch (e) {
       reject(e);
     }
   });
 };
+
+
 
 
 // Tổng số cuộc hẹn sức khỏa đã hoàn thành 
@@ -101,7 +101,7 @@ let getTotalDoctor = () => {
   return new Promise(async (resolve, reject) => {
     try {
       let doctors = await db.User.findAll({
-        where: { roleId: "R2" },
+        where: { roleId: "2" },
         attributes: ["id", "roleId"],
         raw: true,
         nest: true,
