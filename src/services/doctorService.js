@@ -32,8 +32,6 @@ let getTopDoctorHome = (limitInput) => {
         raw: true,
         nest: true,
       });
-
-      
       users = users.map((user) => {
         if (user.image && Buffer.isBuffer(user.image)) {
           user.image = user.image.toString("utf8");
@@ -98,7 +96,6 @@ let getAllDoctors = () => {
   });
 };
 
-
 let getAllDoctorInfos = async () => {
   try {
     const result = await db.Doctor_Infor.findAll({
@@ -142,9 +139,6 @@ let getAllDoctorInfos = async () => {
   }
 };
 
-
-
-
 let checkRequiredFields = (inputData) => {
   if (inputData.action === "CREATE") {
   let arrFields = [
@@ -176,7 +170,6 @@ let checkRequiredFields = (inputData) => {
     element: "",
   };
 };
-
 
 let saveDetailInforDoctor = (inputData) => {
   return new Promise(async (resolve, reject) => {
@@ -268,7 +261,6 @@ let saveDetailInforDoctor = (inputData) => {
   });
 };
 
-
 // Lấy thông tin chi tiết bác sĩ theo id lên giao diện 
 let getDetailDoctorById = (inputId) => {
   return new Promise(async (resolve, reject) => {
@@ -343,6 +335,7 @@ let getDetailDoctorById = (inputId) => {
   });
 };
 
+//Xóa thông tin doctor 
 let deleteDoctor = (id) => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -828,19 +821,19 @@ let sendRemedy = (data) => {
 
 
 module.exports = {
-  getTopDoctorHome: getTopDoctorHome,
-  getAllDoctors: getAllDoctors,
+  getTopDoctorHome,
+  getAllDoctors,
   getAllDoctorInfos, 
   editDoctor,
   deleteDoctor,
-  saveDetailInforDoctor: saveDetailInforDoctor,
-  getDetailDoctorById: getDetailDoctorById,
-  bulkCreateSchedule: bulkCreateSchedule,
-  getScheduleByDate: getScheduleByDate,
-  getExtraInforDoctorById: getExtraInforDoctorById,
-  getProfileDoctorById: getProfileDoctorById,
-  getListPatientForDoctor: getListPatientForDoctor,
-  sendRemedy: sendRemedy,
-  cancelBooking: cancelBooking,
+  saveDetailInforDoctor,
+  getDetailDoctorById,
+  bulkCreateSchedule,
+  getScheduleByDate,
+  getExtraInforDoctorById,
+  getProfileDoctorById,
+  getListPatientForDoctor,
+  sendRemedy,
+  cancelBooking,
   deleteSchedule,
 };

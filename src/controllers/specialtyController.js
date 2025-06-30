@@ -41,7 +41,6 @@ let createSpecialty = async (req, res) => {
   }
 };
 
-
 // Lấy danh sách chuyên khoa từ db lên giao diện 
 let getAllSpecialty = async (req, res) => {
   try {
@@ -55,7 +54,6 @@ let getAllSpecialty = async (req, res) => {
     });
   }
 };
-
 
 // Lấy chi tiết chuyên khoa theo ID  và vị trí 
 let getDetailSpecialtyById = async (req, res) => {
@@ -73,7 +71,6 @@ let getDetailSpecialtyById = async (req, res) => {
     });
   }
 };
-
 
 // Xóa chuyên khoa theo ID 
 let deleteSpecialty = async (req, res) => {
@@ -128,9 +125,9 @@ let editSpecialty = async (req, res) => {
 };
 
 module.exports = {
-  createSpecialty: createSpecialty,
-  getAllSpecialty: getAllSpecialty,
-  getDetailSpecialtyById: getDetailSpecialtyById,
-  deleteSpecialty: deleteSpecialty,
+  createSpecialty,
+  getAllSpecialty,
+  getDetailSpecialtyById,
+  deleteSpecialty,
   editSpecialty, 
 };

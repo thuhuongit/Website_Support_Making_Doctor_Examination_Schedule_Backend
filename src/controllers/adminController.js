@@ -60,8 +60,8 @@ let getTotalDoctor = async (req, res) => {
 
 
 module.exports = {
-  getWeeklyRevenue: getWeeklyRevenue,
-  getTotalNewUserDay: getTotalNewUserDay,
-  getTotalHealthAppointmentDone: getTotalHealthAppointmentDone,
-  getTotalDoctor: getTotalDoctor,
+  getWeeklyRevenue,
+  getTotalNewUserDay,
+  getTotalHealthAppointmentDone,
+  getTotalDoctor,
 };

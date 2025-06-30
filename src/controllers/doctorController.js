@@ -122,10 +122,6 @@ let editDoctor = async (req, res) => {
   }
 };
 
-
-
-
-
 // Lấy thông tin chi tiết bác sĩ theo id lên giao diện 
 let getDetailDoctorById = async (req, res) => {
   try {
@@ -191,9 +187,6 @@ let getScheduleByDate = async (req, res) => {
   }
 };
 
-
-
-
 let getExtraInforDoctorById = async (req, res) => {
   try {
     let infor = await doctorService.getExtraInforDoctorById(req.query.doctorId);
@@ -220,7 +213,6 @@ let getProfileDoctorById = async (req, res) => {
   }
 };
 
-
 // Lấy danh sách bệnh nhận cho bác sĩ theo ngày 
 const getListPatientForDoctor = async (req, res) => {
   try {
@@ -242,7 +234,6 @@ const getListPatientForDoctor = async (req, res) => {
     });
   }
 };
-
 
 // Xóa thông tin lịch khám 
 let deleteSchedule = async (req, res) => {
@@ -284,9 +275,6 @@ let deleteSchedule = async (req, res) => {
   }
 };
 
-
-
-
 // Xác nhận lịch hẹn bên doctor 
 let sendRemedy = async (req, res) => {
   try {
@@ -300,7 +288,6 @@ let sendRemedy = async (req, res) => {
     });
   }
 };
-
 
 // Hủy lịch hẹn bên doctor 
 let cancelBooking = async (req, res) => {
@@ -318,19 +305,19 @@ let cancelBooking = async (req, res) => {
 };
 
 module.exports = {
-  getTopDoctorHome: getTopDoctorHome,
-  getAllDoctors: getAllDoctors,
+  getTopDoctorHome,
+  getAllDoctors,
   getAllDoctorInfos,
-  postInforDoctor: postInforDoctor,
+  postInforDoctor,
   editDoctor,
   deleteDoctor,
-  getDetailDoctorById: getDetailDoctorById,
-  bulkCreateSchedule: bulkCreateSchedule,
-  getScheduleByDate: getScheduleByDate,
-  getExtraInforDoctorById: getExtraInforDoctorById,
-  getProfileDoctorById: getProfileDoctorById,
-  getListPatientForDoctor: getListPatientForDoctor,
-  sendRemedy: sendRemedy,
-  cancelBooking: cancelBooking,
+  getDetailDoctorById,
+  bulkCreateSchedule,
+  getScheduleByDate,
+  getExtraInforDoctorById,
+  getProfileDoctorById,
+  getListPatientForDoctor,
+  sendRemedy,
+  cancelBooking,
   deleteSchedule, 
 };

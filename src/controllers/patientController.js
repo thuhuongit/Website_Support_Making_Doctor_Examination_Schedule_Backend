@@ -1,7 +1,6 @@
 import patientService from "../services/patientService";
 
 
-
 // Hàm này để tạo lịch hẹn cho bệnh nhân và gửi email xác nhận 
 let postBookAppointment = async (req, res) => {
   try {
@@ -15,8 +14,6 @@ let postBookAppointment = async (req, res) => {
     });
   }
 };
-
-
 
 // Hàm này sẽ dùng để xác nhận lịch hẹn từ email 
 let postVerifyBookAppointment = async (req, res) => {
@@ -33,6 +30,6 @@ let postVerifyBookAppointment = async (req, res) => {
 };
 
 module.exports = {
-  postBookAppointment: postBookAppointment,
-  postVerifyBookAppointment: postVerifyBookAppointment,
+  postBookAppointment,
+  postVerifyBookAppointment,
 };

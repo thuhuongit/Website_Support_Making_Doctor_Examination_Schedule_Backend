@@ -5,9 +5,6 @@ import { raw } from "body-parser";
 
 const salt = bcrypt.genSaltSync(10);
 
-
-
-
 // Đăng nhập admin và doctor 
 let handleUserLogin = (email, password) => {
     return new Promise(async (resolve, reject) => {
@@ -79,7 +76,6 @@ let handleUserLogin = (email, password) => {
     });
 };
 
-
 // Check xem email đã tồn tại trong hệ thống chưa 
 let checkUserEmail = (email) => {
     return new Promise(async (resolve, reject) => {
@@ -94,8 +90,6 @@ let checkUserEmail = (email) => {
         }
     });
 };
-
-
 
 // Lấy tất cả người dùng hoặc người dùng theo ID 
 let getAllUsers = (userId) => {
@@ -169,8 +163,6 @@ const createNewUser = async (data) => {
 
         const password = data.password.trim();
         const hashedPassword = await hashUserPassword(password);
-
-    
 
         await db.User.create({
             email: data.email,

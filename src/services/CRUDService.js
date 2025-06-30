@@ -18,15 +18,12 @@ let createNewUser = async (data) => {
                 phone: data.phone,
                 gender: data.gender === '1' ? true : false, 
                 roleId: data.roleId
-
             })
-
             resolve ("ok create a new user ")
         } catch (e) {
             reject(e);   
         }
     })   
-
 }
 
 
@@ -35,8 +32,6 @@ let hashUserPassword = (password) => {
         try {
             let hashPassword = await bcrypt.hashSync(password, salt);
             resolve(hashPassword);
-           
-            
         } catch (e) {
             reject(e);
             
@@ -44,7 +39,6 @@ let hashUserPassword = (password) => {
 
     })
 }
-
 
 let getAllUser = () => {
     return new Promise ( async (resolve, reject) => {
@@ -139,10 +133,10 @@ let deleteUserById = (userId) => {
 
 
 module.exports ={
-    createNewUser: createNewUser,
-    getAllUser: getAllUser, 
-    getUserInfoById: getUserInfoById,
-    updateUserData: updateUserData, 
-    deleteUserById: deleteUserById
+    createNewUser,
+    getAllUser, 
+    getUserInfoById,
+    updateUserData, 
+    deleteUserById,
 
 }

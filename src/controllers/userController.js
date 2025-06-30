@@ -3,12 +3,11 @@ import userService from "../services/userService";
 const multer = require("multer");
 const upload = multer(); // dùng memory storage
 
+//Login
 let handleLogin = async function (req, res) {
     let email = req.body.email;
     console.log('your email: ' + email)
     let password = req.body.password;
-    
-
     if (!email || !password){
         return res.status(500).json({
             errCode: 1,
@@ -17,16 +16,10 @@ let handleLogin = async function (req, res) {
     }
 
     let userData = await userService.handleUserLogin(email, password); 
-    
-
-    
     res.status(200).json({
         errCode: userData.errCode,
         message: userData.errMessage, 
         user: userData.user ? userData.user : {}
-          
-        
-
     })
 }
 
@@ -76,7 +69,6 @@ let handleCreateNewUser = async (req, res) => {
     const data = req.body;
     const avatarFile = req.file;
 
-
     if (avatarFile) {
       data.avatar = `/uploads/${avatarFile.filename}`; 
     }
@@ -93,10 +85,9 @@ let handleCreateNewUser = async (req, res) => {
 // Cập nhật thông tin ngưới dùng 
 let handleEditUser = async (req, res) => {
     try {
-        // Parse dữ liệu từ FormData
+        
         const data = req.body;
 
-        // Nếu có file ảnh
         if (req.file) {
             data.avatar = req.file.buffer.toString("base64");
         }
@@ -182,8 +173,6 @@ let postForgotPassword = async (req, res) => {
       });
     }
   };
-
-
 
 
 

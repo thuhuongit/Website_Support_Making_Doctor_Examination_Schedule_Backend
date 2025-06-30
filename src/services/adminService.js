@@ -70,9 +70,6 @@ let getTotalNewUserDay = () => {
   });
 };
 
-
-
-
 // Tổng số cuộc hẹn sức khỏe đã hoàn thành 
 let getTotalHealthAppointmentDone = () => {
   return new Promise(async (resolve, reject) => {
@@ -122,8 +119,8 @@ let getTotalDoctor = () => {
 
 
 module.exports = {
-  getWeeklyRevenue: getWeeklyRevenue,
-  getTotalNewUserDay: getTotalNewUserDay,
-  getTotalHealthAppointmentDone: getTotalHealthAppointmentDone,
-  getTotalDoctor: getTotalDoctor,
+  getWeeklyRevenue,
+  getTotalNewUserDay,
+  getTotalHealthAppointmentDone,
+  getTotalDoctor,
 };

@@ -17,7 +17,6 @@ let createSpecialty = async (data) => {
   }
 };
 
-
 // Lấy danh sách chuyên khoa từ db lên giao diện 
 let getAllSpecialty = () => {
   return new Promise(async (resolve, reject) => {
@@ -172,9 +171,9 @@ let editSpecialty = (data) => {
 
 
 module.exports = {
-  createSpecialty: createSpecialty,
-  getAllSpecialty: getAllSpecialty,
-  getDetailSpecialtyById: getDetailSpecialtyById,
-  deleteSpecialty: deleteSpecialty, 
+  createSpecialty,
+  getAllSpecialty,
+  getDetailSpecialtyById,
+  deleteSpecialty, 
   editSpecialty, 
 };

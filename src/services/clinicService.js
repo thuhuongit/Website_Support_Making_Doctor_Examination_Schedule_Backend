@@ -32,7 +32,6 @@ let getAllClinic = () => {
        }
    });
 }
-
 resolve({
   errCode: 0,
   errMessage: "Ok!",
@@ -44,8 +43,6 @@ resolve({
     }
   });
 };
-
-
 
 // Lấy chi tiết phòng khám theo ID và vị trí 
 let getDetailClinicById = (inputId) => {
@@ -108,7 +105,6 @@ let deleteClinic = (id) => {
       }
 
       await db.Clinic.destroy({ where: { id } });
-
       resolve({
         errCode: 0,
         errMessage: "Delete clinic success",
@@ -168,9 +164,9 @@ let editClinic = (data) => {
 };
 
 module.exports = {
-  createClinic: createClinic,
-  getAllClinic: getAllClinic,
-  getDetailClinicById: getDetailClinicById,
+  createClinic,
+  getAllClinic,
+  getDetailClinicById,
   deleteClinic, 
   editClinic, 
 };
