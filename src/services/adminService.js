@@ -73,22 +73,22 @@ let getTotalNewUserDay = () => {
 
 
 
-// Tổng số cuộc hẹn sức khỏa đã hoàn thành 
+// Tổng số cuộc hẹn sức khỏe đã hoàn thành 
 let getTotalHealthAppointmentDone = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      let apointmentDones = await db.Booking.findAll({
+      let appointmentDones = await db.Booking.findAll({
         where: { statusId: "S3" },
         attributes: ["id", "createdAt", "statusId"],
         raw: true,
         nest: true,
       });
 
-      let totalHealthApointmentDone = apointmentDones.length;
+      let totalHealthAppointmentDone = appointmentDones.length;
 
       resolve({
         errCode: 0,
-        data: { totalHealthApointmentDone: totalHealthApointmentDone },
+        data: { totalHealthAppointmentDone: totalHealthAppointmentDone },
       });
     } catch (e) {
       reject(e);
