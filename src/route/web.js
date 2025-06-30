@@ -28,10 +28,30 @@ let initWebRoutes = (app) => {
       userController.postVerifyRetrievePassword
     );
     router.get("/api/allcode", userController.getAllCode);
+    router.get(
+      "/api/get-extra-infor-doctor-by-id",
+      doctorController.getExtraInforDoctorById
+    );
+    router.get(
+      "/api/get-profile-doctor-by-id",
+      doctorController.getProfileDoctorById
+    );
+
+
   
 
 
 // Giao diện Admin 
+
+     // Màn hình Dashboarh 
+    router.get("/api/get-weekly-revenue", adminController.getWeeklyRevenue); //Tổng doanh thu 7 ngày gần nhất
+    router.get("/api/get-total-new-user-day", adminController.getTotalNewUserDay); // Tổng số người dùng mới trong hôm nay 
+    router.get(
+      "/api/get-total-health-appointment-done",
+      adminController.getTotalHealthAppointmentDone
+    ); // Tổng số cuộc hẹn đã hoàn thành
+    router.get("/api/get-total-doctor", adminController.getTotalDoctor);
+
     // Màn hình ManageUser
     router.get('/api/get-all-users', userController.getAllUsers); 
     router.post('/api/create-new-user', upload.single('avatar'), userController.handleCreateNewUser);
@@ -122,63 +142,6 @@ let initWebRoutes = (app) => {
 
     router.post("/api/send-remedy", doctorController.sendRemedy); // xác nhận lịch hẹn trong doctor 
     router.post("/api/cancel-booking", doctorController.cancelBooking);// từ chối lịch hẹn trong doctor 
-  
-
-
-
-
-
-
-
-
-
-
-
-    
-    router.get(
-      "/api/get-extra-infor-doctor-by-id",
-      doctorController.getExtraInforDoctorById
-    );
-    router.get(
-      "/api/get-profile-doctor-by-id",
-      doctorController.getProfileDoctorById
-    );
-
-
-    
-  
-  
-   
-  
-    
-    router.get("/api/get-weekly-revenue", adminController.getWeeklyRevenue);
-    router.get("/api/get-total-new-user-day", adminController.getTotalNewUserDay);
-    router.get(
-      "/api/get-total-health-appointment-done",
-      adminController.getTotalHealthAppointmentDone
-    );
-    router.get("/api/get-total-doctor", adminController.getTotalDoctor);
-    router.get(
-      "/api/get-top-three-doctors-of-the-year",
-      adminController.getTopThreeDoctorsOfTheYear
-    );
-    router.get(
-      "/api/get-top-four-vip-patient",
-      adminController.getTopFourVipPatient
-    );
-    router.get(
-      "/api/get-monthly-revenue-specialty",
-      adminController.getMonthlyRevenueSpecialty
-    );
-
-
-
-
-  
-
-
-
-
 
 
      return app.use("/", router);

@@ -1,5 +1,7 @@
 import adminService from "../services/adminService";
 
+
+// Tổng doanh thu 7 ngày gần nhất 
 let getWeeklyRevenue = async (req, res) => {
   try {
     let infor = await adminService.getWeeklyRevenue();
@@ -13,6 +15,7 @@ let getWeeklyRevenue = async (req, res) => {
   }
 };
 
+// Tổng số người dùng mới trong hôm nay 
 let getTotalNewUserDay = async (req, res) => {
   try {
     let infor = await adminService.getTotalNewUserDay();
@@ -26,6 +29,7 @@ let getTotalNewUserDay = async (req, res) => {
   }
 };
 
+// Tổng số cuộc hẹn đã hoàn thành 
 let getTotalHealthAppointmentDone = async (req, res) => {
   try {
     let infor = await adminService.getTotalHealthAppointmentDone();
@@ -39,6 +43,7 @@ let getTotalHealthAppointmentDone = async (req, res) => {
   }
 };
 
+// Tổng số bác sĩ 
 let getTotalDoctor = async (req, res) => {
   try {
     let infor = await adminService.getTotalDoctor();
@@ -52,51 +57,11 @@ let getTotalDoctor = async (req, res) => {
   }
 };
 
-let getTopThreeDoctorsOfTheYear = async (req, res) => {
-  try {
-    let infor = await adminService.getTopThreeDoctorsOfTheYear();
-    return res.status(200).json(infor);
-  } catch (e) {
-    console.log(e);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
 
-let getTopFourVipPatient = async (req, res) => {
-  try {
-    let infor = await adminService.getTopFourVipPatient();
-    return res.status(200).json(infor);
-  } catch (e) {
-    console.log(e);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
-
-let getMonthlyRevenueSpecialty = async (req, res) => {
-  try {
-    let infor = await adminService.getMonthlyRevenueSpecialty();
-    return res.status(200).json(infor);
-  } catch (e) {
-    console.log(e);
-    return res.status(200).json({
-      errCode: -1,
-      errMessage: "Error from server",
-    });
-  }
-};
 
 module.exports = {
   getWeeklyRevenue: getWeeklyRevenue,
   getTotalNewUserDay: getTotalNewUserDay,
   getTotalHealthAppointmentDone: getTotalHealthAppointmentDone,
   getTotalDoctor: getTotalDoctor,
-  getTopThreeDoctorsOfTheYear: getTopThreeDoctorsOfTheYear,
-  getTopFourVipPatient: getTopFourVipPatient,
-  getMonthlyRevenueSpecialty: getMonthlyRevenueSpecialty,
 };

@@ -17,7 +17,7 @@ let getTopDoctorHome = async (req, res) => {
   }
 };
 
-// Lấy danh sáchách tất cả bác sĩ 
+// Lấy danh sách tất cả bác sĩ 
 let getAllDoctors = async (req, res) => {
   try {
     let doctors = await doctorService.getAllDoctors();
@@ -46,6 +46,7 @@ let postInforDoctor = async (req, res) => {
   }
 };
 
+//Lấy tất cả thông tin bác sĩ 
 let getAllDoctorInfos = async (req, res) => {
   const result = await doctorService.getAllDoctorInfos();
   return res.status(200).json(result);
@@ -66,7 +67,7 @@ let deleteDoctor = async (req, res) => {
   }
 };
 
-
+// Sửa thông tin bác sĩ 
 let editDoctor = async (req, res) => {
   try {
     const {
@@ -168,7 +169,7 @@ let bulkCreateSchedule = async (req, res) => {
   }
 };
 
-
+// Lấy thông tin bác sĩ theo ngày
 let getScheduleByDate = async (req, res) => {
   try {
     let { doctorId, date } = req.query;
