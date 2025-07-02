@@ -9,8 +9,6 @@ let getWeeklyRevenue = () => {
   return new Promise(async (resolve, reject) => {
     try {
       let invoices = await db.Invoice.findAll({
-        // where: { createdAt>=moment(new Date()).subtract(3, 'days'),createdAt<=(new Date())},
-        // order: [["createdAt", "DESC"]],
         attributes: ["totalCost", "createdAt"],
         raw: true,
         nest: true,
@@ -115,8 +113,6 @@ let getTotalDoctor = () => {
     }
   });
 };
-
-
 
 module.exports = {
   getWeeklyRevenue,

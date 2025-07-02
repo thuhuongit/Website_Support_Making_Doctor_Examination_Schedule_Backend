@@ -1,6 +1,5 @@
 const db = require("../models");
 
-
 // Thêm chuyên khoa mới vào db ở bên Admin 
 let createSpecialty = async (data) => {
   try {
@@ -30,22 +29,19 @@ let getAllSpecialty = () => {
               image: Buffer.from(item.image, 'base64').toString('base64')
              } else {
               console.log("No image data found for item", item);
-    }
-  });
-}
-
-resolve({
-  errCode: 0,
-  errMessage: "Ok!",
-  data,
-});
-
-    } catch (e) {
-      reject(e); 
-    }
-  });
-};
-
+            }
+          });
+        }
+        resolve({
+            errCode: 0,
+            errMessage: "Ok!",
+            data,
+        });
+        } catch (e) {
+             reject(e); 
+        }
+    });
+  };
 
 // Lấy chi tiết chuyên khoa theo ID và vị trí 
 let getDetailSpecialtyById = (inputId, location) => {
@@ -61,9 +57,7 @@ let getDetailSpecialtyById = (inputId, location) => {
           where: { id: inputId },
           attributes: ["name", "descriptionHTML", "descriptionMarkdown"],
         });
-
         if (data) {
-         
           let doctorSpecialty = [];
           if (location === "ALL") {
             doctorSpecialty = await db.Doctor_Infor.findAll({
@@ -71,13 +65,11 @@ let getDetailSpecialtyById = (inputId, location) => {
               attributes: ["doctorId", "provinceId"],
             });
           } else {
-            
             doctorSpecialty = await db.Doctor_Infor.findAll({
               where: { specialtyId: inputId, provinceId: location },
               attributes: ["doctorId", "provinceId"],
             });
           }
-
           data.doctorSpecialty = doctorSpecialty;
         } else {
           data = {};
@@ -104,7 +96,6 @@ let deleteSpecialty = (id) => {
           errMessage: "Missing specialty id",
         });
       }
-
       const spec = await db.Specialty.findOne({ where: { id } });
       if (!spec) {
         return resolve({
@@ -112,9 +103,7 @@ let deleteSpecialty = (id) => {
           errMessage: "Specialty not found",
         });
       }
-
       await db.Specialty.destroy({ where: { id } });
-
       resolve({
         errCode: 0,
         errMessage: "Delete specialty success",
@@ -137,7 +126,6 @@ let editSpecialty = (data) => {
           errMessage: "Missing required parameters",
         });
       }
-
       const specialty = await db.Specialty.findOne({ where: { id } });
       if (!specialty) {
         return resolve({
@@ -155,7 +143,6 @@ let editSpecialty = (data) => {
         },
         { where: { id } }
       );
-
       return resolve({
         errCode: 0,
         errMessage: "Update specialty success",
@@ -166,9 +153,6 @@ let editSpecialty = (data) => {
     }
   });
 };
-
-
-
 
 module.exports = {
   createSpecialty,

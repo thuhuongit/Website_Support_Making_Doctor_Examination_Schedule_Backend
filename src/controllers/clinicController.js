@@ -13,7 +13,7 @@ let createClinic = async (req, res) => {
       });
     }
 
-    // Dữ liệu sẽ được lưu vào cơ sở dữ liệu
+    
     const data = {
       name,
       address,
@@ -21,10 +21,9 @@ let createClinic = async (req, res) => {
       image: `uploads/${imageFile.filename}`,
     }
 
-    // Gọi service để thêm phòng khám 
+     
         const result = await clinicService.createClinic(data);
     
-        // Trả về kết quả thành công
         return res.status(200).json({
           errCode: 0,
           message: "Thêm phòng khám thành công!",
@@ -86,7 +85,6 @@ let deleteClinic = async (req, res) => {
 };
 
 // Sửa thông tin phòng khám theo ID
-
 let editClinic = async (req, res) => {
   try {
     const { id, name, address, description } = req.body;

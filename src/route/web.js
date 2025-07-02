@@ -44,34 +44,34 @@ let initWebRoutes = (app) => {
       "/api/get-total-health-appointment-done",
       adminController.getTotalHealthAppointmentDone
     ); // Tổng số cuộc hẹn đã hoàn thành
-    router.get("/api/get-total-doctor", adminController.getTotalDoctor);
+    router.get("/api/get-total-doctor", adminController.getTotalDoctor);//Tổng số bác sĩ
 
     // Màn hình ManageUser
-    router.get('/api/get-all-users', userController.getAllUsers); 
-    router.post('/api/create-new-user', upload.single('avatar'), userController.handleCreateNewUser);
-    router.delete('/api/delete-user', userController.handleDeleteUser);
-    router.put("/api/edit-user", upload.single("avatar"), userController.handleEditUser);
+    router.get('/api/get-all-users', userController.getAllUsers); // Hiển thị tất cả user 
+    router.post('/api/create-new-user', upload.single('avatar'), userController.handleCreateNewUser); //Thêm user
+    router.delete('/api/delete-user', userController.handleDeleteUser); // Xóa user
+    router.put("/api/edit-user", upload.single("avatar"), userController.handleEditUser); // Sửa user
 
     // Màn hình Quản lý kế hoạch khám bệnh 
     router.post("/api/bulk-create-schedule", doctorController.bulkCreateSchedule);
     router.delete("/api/delete-schedule", doctorController.deleteSchedule); // Chỉnh sửa lịch khám bệnh
 
     // Màn hình Quản lý chuyên khoa 
-    router.get("/api/get-specialty", specialtyController.getAllSpecialty);
-    router.post("/api/create-new-specialty", upload.single("image"), specialtyController.createSpecialty); // Upload hình ảnh chỗ chuyên khoa phổ biến
-    router.delete("/api/delete-specialty", specialtyController.deleteSpecialty);
-    router.put('/api/edit-specialty', upload.single("image"), specialtyController.editSpecialty);
+    router.get("/api/get-specialty", specialtyController.getAllSpecialty);// lấy tất cả chuyên khoa
+    router.post("/api/create-new-specialty", upload.single("image"), specialtyController.createSpecialty); // Thêm chuyên khoa 
+    router.delete("/api/delete-specialty", specialtyController.deleteSpecialty); // xóa chuyên khoa 
+    router.put('/api/edit-specialty', upload.single("image"), specialtyController.editSpecialty); // sửa chuyên khoa 
 
 
 
     // Màn hình phòng khám 
-    router.get("/api/get-clinic", clinicController.getAllClinic);
-    router.post("/api/create-new-clinic", upload.single("image"), clinicController.createClinic);
-    router.delete("/api/delete-clinic", clinicController.deleteClinic);
-    router.put('/api/edit-clinic', upload.single("image"), clinicController.editClinic);
+    router.get("/api/get-clinic", clinicController.getAllClinic); // lấy tất cả phòng khám 
+    router.post("/api/create-new-clinic", upload.single("image"), clinicController.createClinic); //Thêm phòng khám
+    router.delete("/api/delete-clinic", clinicController.deleteClinic);//xóa phòng khám
+    router.put('/api/edit-clinic', upload.single("image"), clinicController.editClinic); //Sửa phòng khám
 
 
-    // Thông tin bác sĩ 
+    // Màn hình quản lý thông tin bác sĩ 
     router.get("/api/get-all-doctors", doctorController.getAllDoctors);
     router.post("/api/save-infor-doctors", doctorController.postInforDoctor);
     router.get("/api/get-all-doctor-infos", doctorController.getAllDoctorInfos);

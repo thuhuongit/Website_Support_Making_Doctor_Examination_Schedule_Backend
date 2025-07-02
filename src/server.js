@@ -6,9 +6,7 @@ import connectDB from './config/connectDB';
 import cors from "cors";   
 const path = require('path');
 
-
 require('dotenv').config();  
-
 let app = express();   
 
 // Cấu hình CORS    

@@ -31,7 +31,6 @@ let getAllDoctors = async (req, res) => {
   }
 };
 
-
 // Lưu thông tin HTML hoặc Markdown của bác sĩ 
 let postInforDoctor = async (req, res) => {
   try {
@@ -86,14 +85,12 @@ let editDoctor = async (req, res) => {
       description,
     } = req.body;
 
-    // Chỉ bắt buộc ID để xác định thông tin
     if (!id || !doctorId) {
       return res.status(400).json({
         errCode: 1,
         errMessage: "Thiếu ID hoặc doctorId!",
       });
     }
-
     const data = {
       id,
       doctorId,
@@ -109,7 +106,6 @@ let editDoctor = async (req, res) => {
       contentHTML,
       description,
     };
-
     const result = await doctorService.editDoctor(data);
     return res.status(200).json(result);
 
@@ -147,8 +143,6 @@ let bulkCreateSchedule = async (req, res) => {
         errMessage: "Missing required parameters: arrSchedule, doctorId, date",
       });
     }
-
-    // truyền MAX_NUMBER vào service
     let infor = await doctorService.bulkCreateSchedule({
       arrSchedule,
       doctorId,
@@ -175,7 +169,6 @@ let getScheduleByDate = async (req, res) => {
         errMessage: "Missing doctorId or date",
       });
     }
-
     let data = await doctorService.getScheduleByDate(doctorId, date);
     return res.status(200).json(data);
   } catch (e) {

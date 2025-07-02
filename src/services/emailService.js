@@ -44,8 +44,6 @@ const getBookingEmailBody = (data) => {
   `;
 };
 
-
-
 // Email lấy lại mật khẩu
 const getForgotPasswordEmailBody = (data) => {
   const { redirectLink } = data;

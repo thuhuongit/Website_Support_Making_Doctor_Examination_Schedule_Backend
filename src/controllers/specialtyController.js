@@ -1,21 +1,17 @@
 import specialtyService from "../services/speciatlyService";
 
-
 // Thêm chuyên  khoa mới vào db ở bên Admin 
 let createSpecialty = async (req, res) => {
   try {
     const { name, descriptionMarkdown, descriptionHTML } = req.body;
     const imageFile = req.file;
 
-    // Kiểm tra các thông tin bắt buộc
     if (!name || !descriptionMarkdown || !descriptionHTML || !imageFile) {
       return res.status(400).json({
         errCode: 1,
         errMessage: "Thiếu thông tin bắt buộc!",
       });
     }
-
-    // Dữ liệu sẽ được lưu vào cơ sở dữ liệu
     const data = {
       name,
       descriptionMarkdown,
@@ -23,10 +19,7 @@ let createSpecialty = async (req, res) => {
       image: `uploads/${imageFile.filename}`,
     };
 
-    // Gọi service để thêm chuyên khoa
     const result = await specialtyService.createSpecialty(data);
-
-    // Trả về kết quả thành công
     return res.status(200).json({
       errCode: 0,
       message: "Thêm chuyên khoa thành công!",
@@ -93,7 +86,6 @@ let editSpecialty = async (req, res) => {
     const { id, name, descriptionMarkdown, descriptionHTML } = req.body;
     const imageFile = req.file;
 
-    // Kiểm tra các thông tin bắt buộc
     if (!id || !name || !descriptionMarkdown || !descriptionHTML) {
       return res.status(400).json({
         errCode: 1,
@@ -111,9 +103,7 @@ let editSpecialty = async (req, res) => {
     if (imageFile) {
       data.image = `uploads/${imageFile.filename}`; 
     }
-
     const result = await specialtyService.editSpecialty(data);
-
     return res.status(200).json(result);
   } catch (e) {
     console.error(e);

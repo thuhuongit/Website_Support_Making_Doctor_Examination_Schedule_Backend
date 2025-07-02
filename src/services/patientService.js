@@ -9,7 +9,6 @@ let buildUrlEmail = (doctorId, token) => {
   return result;
 };
 
-
 // Hàm này để tạo lịch hẹn cho bệnh nhân và gửi email xác nhận 
 let postBookAppointment = (data) => {
   return new Promise(async (resolve, reject) => {
@@ -65,18 +64,14 @@ let postBookAppointment = (data) => {
          attributes: ['firstName', 'lastName'],
          raw: true,
     });
-
       if (!doctor) {
           return resolve({
              errCode: 3,
              errMessage: "Doctor not found",
      });
    }
-
          // Ghép tên bác sĩ đầy đủ
        let doctorName = doctor.lastName + " " + doctor.firstName;
-
-
       // Gửi email
       await emailService.sendSimpleEmail({
         receiverEmail: data.email,
@@ -87,7 +82,6 @@ let postBookAppointment = (data) => {
         language: data.language,
         redirectLink: buildUrlEmail(data.doctorId, token),
       });
-
       resolve({
         errCode: 0,
         errMessage: "Save info patient succeed!",
@@ -116,7 +110,6 @@ let postVerifyBookAppointment = (data) => {
           where: { doctorId: data.doctorId, token: data.token, statusId: "S1" },
           raw: false,
         });
-
         if (appointment) {
           console.log("Found appointment, updating status...");  
           appointment.statusId = "S2"; 

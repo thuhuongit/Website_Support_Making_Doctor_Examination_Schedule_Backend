@@ -1,20 +1,19 @@
 import userService from "../services/userService";
 
 const multer = require("multer");
-const upload = multer(); // dùng memory storage
+const upload = multer(); 
 
 //Login
 let handleLogin = async function (req, res) {
     let email = req.body.email;
-    console.log('your email: ' + email)
+    console.log('Your email: ' + email)
     let password = req.body.password;
     if (!email || !password){
         return res.status(500).json({
             errCode: 1,
-            message: 'missing inputs'
+            message: 'Missing inputs'
         })
     }
-
     let userData = await userService.handleUserLogin(email, password); 
     res.status(200).json({
         errCode: userData.errCode,
@@ -32,7 +31,6 @@ let getAllUsers = async(req, res) => {
             errCode: 1,
             errMessage: 'Missing required parameters',
             users: []
-
         })
     }
     let users = await userService.getAllUsers(id);
@@ -62,7 +60,6 @@ let getOne = async(req, res) => {
     })
 }
 
-
 // Tạo  người dùng mới 
 let handleCreateNewUser = async (req, res) => {
   try {
@@ -72,7 +69,6 @@ let handleCreateNewUser = async (req, res) => {
     if (avatarFile) {
       data.avatar = `/uploads/${avatarFile.filename}`; 
     }
-
     const message = await userService.createNewUser(data);
     return res.status(200).json(message);
   } catch (e) {
@@ -87,11 +83,9 @@ let handleEditUser = async (req, res) => {
     try {
         
         const data = req.body;
-
         if (req.file) {
             data.avatar = req.file.buffer.toString("base64");
         }
-
         let message = await userService.updateUserData(data);
         return res.status(200).json(message);
     } catch (error) {
@@ -109,7 +103,6 @@ let handleDeleteUser = async (req, res) => {
         errMessage: "Missing user ID",
       });
     }
-  
     try {
       const result = await userService.deleteUser(id);
       if (result) {
@@ -147,6 +140,7 @@ let getAllCode = async(req, res) => {
         })
     }
 }
+
 let postForgotPassword = async (req, res) => {
     try {
       let infor = await userService.postForgotPasswordService(req.body);
@@ -159,7 +153,6 @@ let postForgotPassword = async (req, res) => {
       });
     }
   };
-  
   
   let postVerifyRetrievePassword = async (req, res) => {
     try {

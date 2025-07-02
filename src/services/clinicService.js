@@ -29,20 +29,19 @@ let getAllClinic = () => {
               image: Buffer.from(item.image, 'base64').toString('base64')
              } else {
               console.log("No image data found for item", item);
-       }
-   });
-}
-resolve({
-  errCode: 0,
-  errMessage: "Ok!",
-  data,
-});
-
-    } catch (e) {
-      reject(e); 
-    }
-  });
-};
+           }
+        });
+      }
+      resolve({
+         errCode: 0,
+         errMessage: "Ok!",
+         data,
+      });
+      } catch (e) {
+          reject(e); 
+      }
+    });
+  };
 
 // Lấy chi tiết phòng khám theo ID và vị trí 
 let getDetailClinicById = (inputId) => {
@@ -127,8 +126,6 @@ let editClinic = (data) => {
           errMessage: "Missing required parameters",
         });
       }
-
-      // Kiểm tra clinic tồn tại
       const clinic = await db.Clinic.findOne({ where: { id } });
       if (!clinic) {
         return resolve({
@@ -136,8 +133,6 @@ let editClinic = (data) => {
           errMessage: "Clinic not found",
         });
       }
-
-      // Cập nhật
       await db.Clinic.update(
         {
           name,
@@ -147,7 +142,6 @@ let editClinic = (data) => {
         },
         { where: { id } }
       );
-
       return resolve({
         errCode: 0,
         errMessage: "Update clinic success",

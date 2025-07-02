@@ -174,12 +174,12 @@ let checkRequiredFields = (inputData) => {
 let saveDetailInforDoctor = (inputData) => {
   return new Promise(async (resolve, reject) => {
     try {
-      // Gán mặc định nếu không truyền
+      
       if (!inputData.selectedPrice) inputData.selectedPrice = "100.000";
       if (!inputData.selectedPayment) inputData.selectedPayment = "cash";
       if (!inputData.selectedProvince) inputData.selectedProvince = "hanoi";
 
-      // Kiểm tra đủ thông tin cần thiết
+      
       let checkObj = checkRequiredFields(inputData);
       if (!checkObj.isValid) {
         return resolve({
@@ -188,14 +188,12 @@ let saveDetailInforDoctor = (inputData) => {
         });
       }
 
-      // ======= MARKDOWN =======
       let doctorMarkdown = await db.Markdown.findOne({
         where: { doctorId: inputData.doctorId },
         raw: false,
       });
 
       if (!doctorMarkdown) {
-        // CREATE
         await db.Markdown.create({
           contentHTML: inputData.contentHTML || '',
           contentMarkdown: inputData.contentMarkdown || '',
@@ -205,7 +203,6 @@ let saveDetailInforDoctor = (inputData) => {
           clinicId: inputData.clinicId,
         });
       } else {
-        // UPDATE
         doctorMarkdown.contentHTML = inputData.contentHTML || doctorMarkdown.contentHTML;
         doctorMarkdown.contentMarkdown = inputData.contentMarkdown || doctorMarkdown.contentMarkdown;
         doctorMarkdown.description = inputData.description || doctorMarkdown.description;
@@ -214,7 +211,6 @@ let saveDetailInforDoctor = (inputData) => {
         await doctorMarkdown.save();
       }
 
-      // ======= DOCTOR_INFOR =======
       let doctorInfor = await db.Doctor_Infor.findOne({
         where: {
           doctorId: inputData.doctorId,
@@ -223,7 +219,6 @@ let saveDetailInforDoctor = (inputData) => {
       });
 
       if (!doctorInfor) {
-        // CREATE
         await db.Doctor_Infor.create({
           doctorId: inputData.doctorId,
           priceId: inputData.selectedPrice,
@@ -237,7 +232,6 @@ let saveDetailInforDoctor = (inputData) => {
           count: 1,
         });
       } else {
-        // UPDATE
         doctorInfor.priceId = inputData.selectedPrice;
         doctorInfor.provinceId = inputData.selectedProvince;
         doctorInfor.paymentId = inputData.selectedPayment;
@@ -314,12 +308,10 @@ let getDetailDoctorById = (inputId) => {
           nest: true,
         });
 
-       
         if (data && data.image) {
           data.image = Buffer.from(data.image, "base64").toString("binary");
         }
         
-
         if (!data) {
           data = {};
         }
@@ -345,7 +337,6 @@ let deleteDoctor = (id) => {
           errMessage: "Missing doctor id",
         });
       }
-
       const doctor = await db.Doctor_Infor.findOne({ where: { id } });
       if (!doctor) {
         return resolve({
@@ -353,9 +344,7 @@ let deleteDoctor = (id) => {
           errMessage: "Doctor not found",
         });
       }
-
       await db.Doctor_Infor.destroy({ where: { id } });
-
       return resolve({
         errCode: 0,
         errMessage: "Delete doctor success",
@@ -384,9 +373,7 @@ let editDoctor = async (data) => {
       description,
     } = data;
 
-    // Cập nhật bảng Doctor_Infor
     let doctorInfo = await db.Doctor_Infor.findOne({ where: { doctorId } });
-
     if (!doctorInfo) {
       return {
         errCode: 2,
@@ -405,7 +392,6 @@ let editDoctor = async (data) => {
 
     await doctorInfo.save();
 
-    // Cập nhật bảng Markdown
     let markdown = await db.Markdown.findOne({ where: { doctorId } });
 
     if (!markdown) {
@@ -414,18 +400,14 @@ let editDoctor = async (data) => {
         errMessage: "Không tìm thấy Markdown",
       };
     }
-
     markdown.contentHTML = contentHTML || markdown.contentHTML;
     markdown.contentMarkdown = contentMarkdown || markdown.contentMarkdown;
     markdown.description = description || markdown.description;
-
     await markdown.save();
-
     return {
       errCode: 0,
       errMessage: "Cập nhật thông tin bác sĩ thành công!",
     };
-
   } catch (err) {
     console.error("Edit doctor failed:", err);
     return {
@@ -445,15 +427,12 @@ let bulkCreateSchedule = (data) => {
         return reject({ errCode: 1, errMessage: "Missing required param" });
       }
 
-      // kiểm tra date hợp lệ
       const dateObj = new Date(date);
       if (isNaN(dateObj.getTime())) {
         return reject({ errCode: 4, errMessage: "Invalid date format" });
       }
 
-      // build danh sách schedule với maxNumber và currentNumber=0
       let schedules = arrSchedule.map(item => {
-        // nếu item chỉ là string thì gán timeType = item
         const timeType = (typeof item === "object" ? item.timeType : item);
         return {
           doctorId,
@@ -464,14 +443,12 @@ let bulkCreateSchedule = (data) => {
         };
       });
 
-      // Lấy các lịch đã có của bác sĩ trong ngày
       const existing = await db.Schedule.findAll({
         where: { doctorId, date },
         attributes: ["doctorId", "date", "timeType"],
         raw: true
       });
 
-      // Chỉ tạo những slot chưa tồn tại
       const toCreate = _.filter(schedules, sch =>
         !existing.some(ex => ex.timeType === sch.timeType)
       );
@@ -616,8 +593,6 @@ let getProfileDoctorById = (doctorId) => {
           raw: false,
           nest: true,
         });
-
-      
         if (data && data.image) {
           data.image =  new Buffer(data.image, "base64").toString("binary");
         }
@@ -625,7 +600,6 @@ let getProfileDoctorById = (doctorId) => {
         if (!data) {
           data = {};
         }
-
         resolve({
           errCode: 0,
           data: data,
@@ -648,7 +622,6 @@ let getListPatientForDoctor = (doctorId, date) => {
         });
         return;
       }
-
       let data = await db.Booking.findAll({
         where: {
           doctorId: doctorId,
@@ -669,7 +642,6 @@ let getListPatientForDoctor = (doctorId, date) => {
         raw: false,
         nest: true,
       });
-
       resolve({
         errCode: 0,
         data: data,
@@ -688,7 +660,6 @@ let deleteSchedule = async (req, res) => {
   try {
     const { doctorId, date, timeType } = req.body;
 
-    // Kiểm tra đủ thông tin
     if (!doctorId || !date || !timeType) {
       return res.status(400).json({
         errCode: 1,
@@ -696,7 +667,6 @@ let deleteSchedule = async (req, res) => {
       });
     }
 
-    // Xoá theo điều kiện
     const deleted = await db.Schedule.destroy({
       where: {
         doctorId,
@@ -737,7 +707,6 @@ let cancelBooking = (data) => {
           errMessage: "Missing required parameter: appointmentId",
         });
       }
-
       let appointment = await db.Booking.findOne({
         where: {
           id: data.appointmentId,
@@ -745,17 +714,14 @@ let cancelBooking = (data) => {
         },
         raw: false,
       });
-
       if (!appointment) {
         return resolve({
           errCode: 2,
           errMessage: "Không tìm thấy lịch hẹn phù hợp hoặc trạng thái không hợp lệ",
         });
       }
-
       appointment.statusId = "S4"; 
       await appointment.save();
-
       return resolve({
         errCode: 0,
         errMessage: "Hủy lịch hẹn thành công",
@@ -777,7 +743,6 @@ let sendRemedy = (data) => {
       console.log("timeType:", data.timeType);
       console.log("date:", data.date);
 
-      // Kiểm tra thiếu tham số
       if (!data.doctorId || !data.patientId || !data.timeType || !data.date) {
         return resolve({
           errCode: 1,

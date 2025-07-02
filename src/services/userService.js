@@ -140,14 +140,12 @@ const createNewUser = async (data) => {
         console.log("First name:", data.firstName);
         console.log("Last name:", data.lastName);
         
-        
         if (!data || !data.email || !data.password || !data.firstName || !data.lastName) {
             return {
                 errCode: 2,
                 message: 'Missing required parameters',
             };
         }
-
         const emailExists = await checkUserEmail(data.email);
         if (emailExists) {
             return {
@@ -155,15 +153,10 @@ const createNewUser = async (data) => {
                 message: 'Your email is already in use',
             };
         }
-
-        
         const roleId = mapRoleToId(data.role);        
         const positionId = mapPositionToId(data.position);
-
-
         const password = data.password.trim();
         const hashedPassword = await hashUserPassword(password);
-
         await db.User.create({
             email: data.email,
             password: hashedPassword,            
@@ -176,14 +169,10 @@ const createNewUser = async (data) => {
             positionId: positionId,              
             image: data.avatar || null,          
         });
-        
-        
-          
         return {
             errCode: 0,
             message: 'User created successfully',
         };
-
     } catch (error) {
         console.error("Error in createNewUser:", error);
         return {
